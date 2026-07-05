@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plantilla Primera - Club Los Indios de Moreno</title>
+    <!-- Vinculamos el mismo archivo de estilos que ya tenemos -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<script>
+    function togglePerfil(boton) {
+        // Busca el elemento 'perfil-jugador' más cercano dentro del padre de la tarjeta
+        const tarjeta = boton.closest('.tarjeta-jugador');
+        const perfil = tarjeta.querySelector('.perfil-jugador');
+        
+        // Cambiamos el display
+        if (perfil.style.display === 'none' || perfil.style.display === '') {
+            perfil.style.display = 'flex';
+        } else {
+            perfil.style.display = 'none';
+        }
+    }
+</script>
+
+</script>
+    <!-- MENÚ DE NAVEGACIÓN (Igual al de inicio) -->
+    <nav class="barra-navegacion">
+        <div class="logo-club">
+            <img src="imagenes/escudo-los-indios.png" alt="Escudo Club Los Indios de Moreno" class="imagen-logo">
+            <span>CRLIM</span>
+        </div>
+        <ul class="menu-enlaces">
+            <!-- Ahora el inicio apunta a index.html y Equipo tiene la clase 'activo' -->
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="index.html#historia">Historia</a></li>
+            <li><a href="equipo.html" class="activo">Equipo</a></li>
+            <li><a href="index.html#partidos">Partidos</a></li>
+            <li><a href="index.html#streaming">Streaming</a></li>
+            <li><a href="index.html#noticias">Noticias</a></li>
+            
+        </ul>
+    </nav>
+
+    <header>
+        <h1>Plantilla del Primer Equipo</h1>
+        <p><em>Los representantes del blanco y negro</em></p>
+    </header>
+
+    <main class="contenedor-principal">
+
+        <!-- SECCIÓN DE LA GRILLA DEL EQUIPO -->
+<section class="seccion-equipo">
+    <h2>Jugadores</h2>
+    <div class="grilla-jugadores">
+    <!--JUGADOR 1-->
+    <div class="tarjeta-jugador">
+    <div class="numero-camiseta">4</div>
+    <img src="imagenes/Juan-Martin.jpg" alt="Juan Martin" class="foto-jugador">
+    
+    <div class="info-jugador">
+        <h3>Juan Martin</h3>
+        <p class="posicion-jugador">Base</p>
+        <button onclick="togglePerfil(this)" class="btn-perfil">Ver Perfil</button>
+    </div>
+
+    <div class="perfil-jugador" style="display:none;">
+        <button onclick="togglePerfil(this)" style="position:fixed; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+        <p><strong>Altura:</strong> 1.85 m</p>
+        <p><strong>Peso:</strong> 85 kg</p>
+        <p><strong>País:</strong> Argentina</p>
+    </div>
+</div>
+<!--JUGADOR 2-->
+ <div class="tarjeta-jugador">
+    <div class="numero-camiseta">7</div>
+    <img src="imagenes/Lucas-Silva.png" alt="Lucas Silva" class="foto-jugador">
+    
+    <div class="info-jugador">
+        <h3>Lucas Silva</h3>
+        <p class="posicion-jugador">Escolta</p>
+        <button onclick="togglePerfil(this)" class="btn-perfil">Ver Perfil</button>
+    </div>
+
+    <div class="perfil-jugador" style="display:none;">
+        <button onclick="togglePerfil(this)" style="position:fixed; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+        <p><strong>Altura:</strong> 1.90 m</p>
+        <p><strong>Peso:</strong> 90 kg</p>
+        <p><strong>País:</strong> Argentina</p>
+    </div>
+</div>
+
+<!--JUGADOR 3 -->
+ <div class="tarjeta-jugador">
+    <div class="numero-camiseta">10</div>
+    <img src="imagenes/Mateo-Gonzalez.png" alt="Mateo Gonzalez" class="foto-jugador">
+    
+    <div class="info-jugador">
+        <h3>Mateo Gonzalez</h3>
+        <p class="posicion-jugador">Alero</p>
+        <button onclick="togglePerfil(this)" class="btn-perfil">Ver Perfil</button>
+    </div>
+
+    <div class="perfil-jugador" style="display:none;">
+        <button onclick="togglePerfil(this)" style="position:fixed; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+        <p><strong>Altura:</strong> 1.98m</p>
+        <p><strong>Peso:</strong> 92 kg</p>
+        <p><strong>País:</strong> España</p>
+    </div>
+</div>
+
+<!--JUGADOR 4 -->
+ <div class="tarjeta-jugador">
+    <div class="numero-camiseta">15</div>
+    <img src="imagenes/Santiago-Rossi.png" alt="Santiago-Rossi" class="foto-jugador">
+    
+    <div class="info-jugador">
+        <h3>Santiago Rossi</h3>
+        <p class="posicion-jugador">Ala Pívot</p>
+        <button onclick="togglePerfil(this)" class="btn-perfil">Ver Perfil</button>
+    </div>
+
+    <div class="perfil-jugador" style="display:none;">
+        <button onclick="togglePerfil(this)" style="position:fixed; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+        <p><strong>Altura:</strong> 2.05m</p>
+        <p><strong>Peso:</strong> 100 kg</p>
+        <p><strong>País:</strong> Italia</p>
+    </div>
+</div>
+<!--JUGADOR 5 -->
+ <div class="tarjeta-jugador">
+    <div class="numero-camiseta">00</div>
+    <img src="imagenes/Breaden-James.png" alt="Breaden-James" class="foto-jugador">
+    
+    <div class="info-jugador">
+        <h3>Breaden James</h3>
+        <p class="posicion-jugador">Pívot</p>
+        <button onclick="togglePerfil(this)" class="btn-perfil">Ver Perfil</button>
+    </div>
+
+    <div class="perfil-jugador" style="display:none;">
+        <button onclick="togglePerfil(this)" style="position:fixed; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer;">✕</button>
+        <p><strong>Altura:</strong> 2.10m</p>
+        <p><strong>Peso:</strong> 105 kg</p>
+        <p><strong>País:</strong> EE.UU</p>
+    </div>
+</div>
+</div> 
+</section>
+ </main>
+
+</body>
+</html>

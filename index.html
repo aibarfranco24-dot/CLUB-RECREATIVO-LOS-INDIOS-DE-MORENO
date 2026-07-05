@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club Recreativo los indios de moreno</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <body>
+
+ <!--BARRA DE NAVEGACION-->
+    <nav class="barra-navegacion">
+        <div class="logo-club">
+            <img src="imagenes/escudo-los-indios.png" alt="Escudo Club Los Indios de Moreno" class="imagen-logo">
+            <span>CRLIM</span>
+        </div>
+        <ul class="menu-enlaces">
+            <li><a href="index.html" >Inicio</a></li>
+            <li><a href="#historia"  >historia </a></li>
+            <li><a href="equipo.html">Equipo</a></li>
+            <li><a href="#partidos">Partidos</a></li>
+            <li><a href="#streaming">Streaming</a></li>
+            <li><a href="#noticias">Noticias</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#seccion-tienda">Tienda</a></li>
+            <li>
+        <a href="#seccion-carrito" class="carrito-icono">
+            <img src="imagenes/carrito.png" alt="Carrito" style="width: 25px;">
+            <span id="contador-carrito">(0)</span>
+        </a>
+    </li>
+        </ul>
+    </nav>
+
+    <section id="hero" class="hero">
+    <div class="hero-overlay">
+        <h1>Club Recreativo Los Indios de Moreno</h1>
+        <p>Tradición, básquet y pasión desde 1938.</p>
+
+    </div>
+</section>
+
+    <!--TITULO-->
+    <header>
+        <h1>Club Recreativo Los Indios de Moreno</h1>
+        <p><em>El equipo de la ciudad</em></p>
+    </header>
+    <main>
+        <!--DESCRIPCION-->
+        <section class="bienvenida">
+            <h2>¡Bienvenidos a nuestra nueva web!</h2>
+            <p>Estamos muy felices de presentar este espacio para todos los hinchas, jugadores y socios del club. Aquí podrás ver los resultados de los partidos, la plantilla del equipo y enterarte de las últimas novedades.</p>
+        </section>
+
+        <!--HISTORIA-->
+        
+        <section id="historia"  class="historia" >
+            <h2>Nuestra Historia</h2>
+            <div class="contenedor-historia">
+                <div class="texto-historia">
+                    <p>Fundado en 1938, el Club Recreativo Los Indios de Moreno nació como un espacio de encuentro para los vecinos y amantes del deporte.</p>
+                    <p>Nuestra historia está forjada por el esfuerzo de socios, familias y grandes jugadores que dejaron todo por estos colores.</p>
+                    <div class="imagen-historia">
+                    <img src="imagenes/foto-fundacion.png" alt="Historia Los Indios de Moreno">
+                     </div>
+                </div>
+                <div class="datos-historicos">
+                    <div class="caja-dato">
+                        <span class="numero-destacado">1938</span>
+                        <p class="etiqueta-dato">Año de Fundación</p>
+                        </div>
+                    </div>
+                    <div class="caja-dato">
+                        <span class="numero-destacado">500+</span>
+                        <p class="etiqueta-dato">Jugadores Formados</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--FIXTURE -->
+        <section id="partidos" class="partidos">
+            <h2>Próximos Partidos</h2>
+        
+            
+            <div class="tarjeta-partido">
+                <h3>Torneo Federal - Fecha 5</h3>
+                <p class="fecha">📅 Próximo Viernes - 21:00 hs</p>
+               
+
+               <div class="enfrentamiento">
+                    <img src="imagenes/escudo-los-indios.png" alt="Los Indios" class="logo-rival">
+                    <span>Los Indios</span>
+                    <span class="vs">vs</span>
+                    <img src="imagenes/pilar.png" alt="Club Atlético Pilar" class="logo-rival">
+                    <span>Atl. Pilar</span>
+               </div>
+                <p class="rival">🏀 <strong>Los Indios de Moreno</strong> vs. Club Atlético Pilar</p>
+                  <p class="estadio">📍 Cancha: Oscar Vicente Perez
+                  <a href= "https://www.google.com/maps/place/Club+Recreativo+Los+Indios/@-34.649382,-58.7949781,17z/data=!3m1!4b1!4m6!3m5!1s0x95bc9450ccc973fb:0x986a00a1c799595b!8m2!3d-34.649382!4d-58.7924032!16s%2Fg%2F1tfpk_py?entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank" 
+                    class="btn-mapa">
+                     Cómo llegar al Oscar Vicente Pérez
+                 </a>
+              </p>
+            </div>
+            
+
+            <div class="tarjeta-partido">
+                <h3>Torneo Federal - Fecha 6</h3>
+                <p class="fecha">📅 Sabado 20/06 - 21:00 hs</p>
+
+              
+                  <div class="enfrentamiento">
+                    <img src="imagenes/escudo-los-indios.png" alt="Los Indios" class="logo-rival">
+                    <span>Los Indios</span>
+                    <span class="vs">vs</span>
+                    <img src="imagenes/boca.png" alt="Club Boca Jrs" class="logo-rival">
+                    <span>Boca Jrs</span>
+               </div>
+                <p class="rival">🏀 <strong>Los Indios de Moreno</strong> vs. Boca Jrs</p>
+                  <p class="estadio">📍 Cancha: La Bombonerita
+                  <a href= "https://www.google.com/maps/place/LA+BOMBONERITA+ESTADIO+LUIS+CONDE+CABJ/@-34.6327338,-58.368749,17z/data=!3m1!4b1!4m6!3m5!1s0x95a334c9f5805f9f:0x5b6ec718d793e7c6!8m2!3d-34.6327338!4d-58.3661741!16s%2Fg%2F11b6grtgv9?entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank" 
+                    class="btn-mapa">
+                     Cómo llegar a la Bombonerita
+                 </a>
+              </p>
+               </div>
+        <!--STREAMING-->
+
+            <section id="streaming" class="seccion-streaming">
+    <h2>¿No podés ir al estadio?</h2>
+    <p>Seguí los partidos en vivo a través de nuestro streaming oficial.</p>
+    
+    <div class="tarjeta-streaming">
+        <div class="estado-en-vivo">● EN VIVO</div>
+        <div class="info-transmision">
+            <h3>Transmisión Oficial - basquetpasstv</h3>
+            <p>Conectate 15 minutos antes del inicio del encuentro.</p>
+            <a href="https://www.basquetpass.tv/" target="_blank" class="btn-streaming">
+                ▶ Ir al canal de streaming
+            </a>
+        </div>
+    </div>
+</section>
+          
+           
+
+        <!--NOTICIAS-->
+      <section id="noticias" class="noticias">
+    <h2>Últimas Noticias</h2>
+    <div class="contenedor-noticias">
+        
+        <div class="tarjeta-noticia">
+            <img src="imagenes/victoria-clasico.png" alt="Festejo" class="foto-noticia">
+            <div class="info-noticia">
+                <h3>Victoria en el clásico de Moreno</h3>
+                <p class="resumen-noticia">Los Indios derrotó a su rival en un partido infartante.</p>
+                     <p class="fecha-noticia">10 de Junio, 2026</p>
+            </div>
+        </div>
+
+        <div class="tarjeta-noticia">
+            <img src="imagenes/obras-estadio.png" alt="Obras en el Microestadio" class="foto-noticia">
+            <div class="info-noticia">
+                <h3>Mejoras en el Microestadio</h3>
+                <p class="resumen-noticia">Se iniciaron las obras para mejorar la infraestructura y las luces.</p>
+                <p class="fecha-noticia">5 de Junio, 2026</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+        <!--Contacto-->
+       <section id="contacto" class="seccion-contacto">
+    <h2>Contacto</h2>
+    <div class="contenedor-contacto">
+        
+        <!-- Formulario -->
+            <form action="https://formspree.io/f/xlgylaqy" method="POST" class="formulario-contacto">
+        <div class="campo">
+            <label>Tu email:</label>
+            <input type="email" name="email" required>
+        </div>
+
+    <div class="campo">
+        <label>Mensaje:</label>
+        <textarea name="message" rows="5" required></textarea>
+    </div>
+
+    <button type="submit">Enviar Mensaje</button>
+</form>
+
+     
+
+        <!-- Información -->
+        <div class="info-contacto">
+            <h3>Visitanos</h3>
+            <p>📍 Microestadio Oscar Pérez, Moreno.</p>
+            <p>📧 Losindiosdemoreno@gmail.com</p>
+            <div class="redes-sociales">
+                <a href="https://www.instagram.com/clublosindios" target="_blank">
+                   <img src="imagenes/logo-instagram.png" alt="Instagram" class="icono-red">
+                </a>
+
+                <a href="https://www.facebook.com/clublosindiosdemoreno" target="_blank">
+                   <img src="imagenes/Logo-Facebook.png" alt="facebook" class="icono-red">
+                </a>
+
+                <a href="https://www.x.com/clublosindios target="_blank">
+                  <img src="imagenes/Logo-twiter.png" alt="twitter" class="icono-red">
+                </a>
+            
+            </div>
+        </div>
+
+<!--TIENDA-->
+   <section id="seccion-tienda" style="padding: 40px; color: white;">
+    <h2>NUESTROS PRODUCTOS</h2>
+    <div id="lista-productos" style="display: flex; gap: 20px;"></div>
+</section>
+
+<!--CARRITO-->
+<section id="seccion-carrito">
+    <h2>TU CARRITO</h2>
+    <ul id="lista-carrito"></ul>
+    <p>Total: $<span id="total-carrito">0.00</span></p>
+    
+    <button id="btn-finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
+    
+   <div id="formulario-pedido" style="display:none;">
+    <h3>Datos de entrega y pago</h3>
+    
+    <input type="text" id="nombre-cliente" placeholder="Nombre completo">
+    <input type="text" id="telefono-cliente" placeholder="Teléfono de contacto">
+    
+  <select id="metodo-entrega" onchange="toggleDireccion()">
+    <option value="retiro">Retiro en el club</option>
+    <option value="envio">Envío a domicilio</option>
+</select>
+
+<div id="contenedor-direccion" style="display: none;">
+    <input type="text" id="direccion-cliente" placeholder="Dirección de envío">
+</div>
+    
+    <input type="text" id="tarjeta-numero" placeholder="Número de tarjeta">
+    <div style="display:flex; gap: 10px;">
+        <input type="text" id="tarjeta-fecha" placeholder="MM/AA">
+        <input type="text" id="tarjeta-cvv" placeholder="CVV">
+    </div>
+
+    <button onclick="confirmarPedido()">Confirmar Pedido</button>
+    <button onclick="cerrarFormulario()">Cancelar</button>
+</div>
+</section>
+
+
+
+ 
+
+
+    
+<!--PIE DE PAGINA-->
+      
+    <footer class="pie-pagina">
+        <div class="contenido-footer">
+            <div class="info-club-footer">
+                <h3>🏀 Club Los Indios de Moreno</h3>
+                <p>Pasión, esfuerzo y familia desde 1938.</p>
+            </div>
+            
+            <div class="datos-contacto-footer">
+                <p>📍 Av. Francisco Piovano 2969, Moreno</p>
+                <p>📞 +54 237 462-7363</p>
+                <p>🕒 Lunes a Domingos de 13:00 a 22:00 hs</p>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2026 Club Los Indios de Moreno - Todos los derechos reservados.</p>
+        </div>
+    </footer>
+<!--Logo whatsapp-->
+<a href="https://wa.me/1165663054" class="btn-whatsapp-flotante" target="_blank">
+    <img src="imagenes/logo-whatsapp.png" alt="WhatsApp" class="icono-whatsapp-fijo">
+</a>
+
+
+
+
+
+<script>
+    // 1. Estado inicial
+let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+// 2. Función para pintar el carrito en pantalla
+function renderizarCarrito() {
+    const lista = document.getElementById('lista-carrito');
+    const totalSpan = document.getElementById('total-carrito');
+    const contadorMenu = document.getElementById('contador-carrito');
+    
+    if (lista) lista.innerHTML = '';
+    let total = 0;
+
+    carrito.forEach((prod, index) => {
+        total += prod.precio;
+        
+        if (lista) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${prod.nombre} - $${prod.precio.toFixed(2)} 
+                <button onclick="eliminarProducto(${index})" style="margin-left:10px; cursor:pointer;">X</button>
+            `;
+            lista.appendChild(li);
+        }
+    });
+
+    if (totalSpan) totalSpan.textContent = total.toFixed(2);
+    if (contadorMenu) contadorMenu.textContent = "(" + carrito.length + ")";
+    
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+function eliminarProducto(index) {
+    carrito.splice(index, 1); 
+    renderizarCarrito();
+}
+
+// 3. Función para agregar productos con alerta moderna
+function agregarAlCarrito(nombre, precio) {
+    carrito.push({ nombre: nombre, precio: parseFloat(precio) });
+    renderizarCarrito();
+    
+    // Alerta estilo Toast moderno
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: `${nombre} agregado`,
+        showConfirmButton: false,
+        timer: 1500,
+        background: '#1a1a1a',
+        color: '#ffffff'
+    });
+}
+
+// 4. Función para vaciar
+function vaciarCarrito() {
+    carrito = [];
+    renderizarCarrito();
+}
+
+// 5. Carga de productos (Fetch)
+fetch('http://localhost:3000/productos')
+    .then(res => res.json())
+    .then(prods => {
+        const contenedor = document.getElementById('lista-productos');
+        if (!contenedor) return;
+        
+        contenedor.innerHTML = '';
+        prods.forEach(p => {
+            contenedor.innerHTML += `
+                <div class="producto">
+                    <img src="imagenes/${p.imagen}" alt="${p.nombre}" style="width: 150px;"> 
+                    <h3>${p.nombre}</h3>
+                    <p>$${p.precio}</p>
+                    <button onclick="agregarAlCarrito('${p.nombre}', ${p.precio})">Comprar</button>
+                </div>
+            `;
+        });
+    })
+    .catch(err => console.error('Error al cargar productos:', err));
+
+// 6. Finalizar compra
+function finalizarCompra() {
+    if (carrito.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: 'Tu carrito está vacío.',
+            background: '#1a1a1a',
+            color: '#ffffff'
+        });
+        return;
+    }
+    document.getElementById('formulario-pedido').style.display = 'block';
+    document.getElementById('btn-finalizar').style.display = 'none'; 
+}
+function toggleDireccion() {
+    const metodo = document.getElementById('metodo-entrega').value;
+    const contenedorDireccion = document.getElementById('contenedor-direccion');
+    
+    if (metodo === 'envio') {
+        contenedorDireccion.style.display = 'block'; // Aparece
+    } else {
+        contenedorDireccion.style.display = 'none';  // Desaparece
+        document.getElementById('direccion-cliente').value = ''; // Limpiamos el valor por seguridad
+    }
+}
+
+function cerrarFormulario() {
+    document.getElementById('formulario-pedido').style.display = 'none';
+    document.getElementById('btn-finalizar').style.display = 'inline-block';
+}
+
+function confirmarPedido() {
+    const nombre = document.getElementById('nombre-cliente').value;
+    const telefono = document.getElementById('telefono-cliente').value;
+    const metodo = document.getElementById('metodo-entrega').value;
+    const direccion = document.getElementById('direccion-cliente').value;
+
+    // Solo validamos la dirección si el método es 'envio'
+    if (!nombre || !telefono) {
+        Swal.fire({ icon: 'error', text: 'Completa nombre y teléfono.' });
+        return;
+    }
+    
+    if (metodo === 'envio' && !direccion) {
+        Swal.fire({ icon: 'error', text: 'Por favor ingresa tu dirección para el envío.' });
+        return;
+    }
+
+    // Aquí construirías el mensaje final
+    console.log("Pedido realizado:", { nombre, telefono, metodo, direccion });
+
+    Swal.fire({
+        title: '¡Compra confirmada!',
+        text: `Gracias ${nombre}. Recibirás un mensaje al ${telefono} cuando tu pedido esté listo para ${metodo === 'retiro' ? 'retiro en el club' : 'envío a domicilio'}.`,
+        icon: 'success',
+        background: '#1a1a1a',
+        color: '#ffffff'
+    });
+
+    vaciarCarrito();
+    document.getElementById('formulario-pedido').style.display = 'none';
+    document.getElementById('btn-finalizar').style.display = 'inline-block';
+}
+
+// Inicializar al cargar
+renderizarCarrito();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,688 @@
+
+/* 1. Fondo general de la página estilo "Oscuro Premium" */
+body {
+    background-color: #0a0a0a; /* Negro profundo como el fondo de la imagen */
+    color: #ffffff;             /* Letras blancas */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+/* Estilos para la barra de navegación superior */
+.barra-navegacion {
+    background-color: #000000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px; 
+    border-bottom: 1px solid #1a1a1a;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;             /* Asegura que ocupe todo el ancho */
+    height: 80px;            /* Fija una altura exacta para que no cambie */
+    box-sizing: border-box;  /* Evita que el padding rompa el tamaño */
+}
+
+.logo-club span {
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+}
+
+.menu-enlaces {
+    list-style: none;             /* Elimina los puntitos negros de la lista */
+    display: flex;                /* Pone los elementos de la lista en fila horizontal */
+    margin: 0;
+    padding: 0;
+    gap: 25px;                    /* Espacio de separación entre cada opción del menú */
+}
+
+.menu-enlaces a {
+    color: #888888;               /* Gris apagado para los enlaces no seleccionados */
+    text-decoration: none;        /* Quita el subrayado feo de los enlaces */
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;     /* Todo en mayúsculas como en la foto */
+    transition: color 0.3s;       /* Suaviza el cambio de color al pasar el mouse */
+}
+
+/* El enlace de la página donde estamos parados (Inicio) o cuando pasamos el mouse */
+.menu-enlaces a.activo, 
+.menu-enlaces a:hover {
+    color: #ffffff;               /* Se vuelve blanco brillante */
+    border-bottom: 2px solid #ffffff; /* Le dibuja la línea blanca abajo idéntica a la foto */
+    padding-bottom: 5px;
+}
+
+/* 2. El encabezado principal */
+header {
+    background-color: #000000;  /* Barra negra pura arriba */
+    text-align: center;
+    padding: 40px 20px;
+    border-bottom: 1px solid #222222; /* Línea gris muy fina para separar */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+}
+
+header p {
+    color: #aaaaaa; /* Gris claro para el eslogan */
+    margin-top: 5px;
+}
+
+/* 3. Contenedor del contenido */
+main {
+    max-width: 900px; /* Ancho máximo para que no se estire infinito */
+    margin: 40px auto; /* Centra todo en la pantalla */
+    padding: 0 20px;
+}
+
+/* 4. Estilo de las secciones */
+h2 {
+    font-size: 1.5rem;
+    text-transform: uppercase; /* Títulos de secciones en mayúsculas como la foto */
+    letter-spacing: 1px;
+    border-bottom: 2px solid #ffffff; /* Línea blanca debajo del título */
+    padding-bottom: 8px;
+    margin-top: 40px;
+}
+
+/* 5. Tu tarjeta de partido adaptada al diseño de la foto */
+.tarjeta-partido {
+    background-color: #141414;      /* Gris muy oscuro para la tarjeta */
+    border: 1px solid #262626;       /* Borde sutil que la hace resaltar del fondo */
+    padding: 25px;
+    border-radius: 6px;              /* Esquinas un poco redondeadas */
+    max-width: 450px;                /* Para que mantenga forma de tarjeta */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Sombra suave para darle profundidad */
+    margin-top: 20px;
+}
+
+.tarjeta-partido h3 {
+    margin-top: 0;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.fecha {
+    color: #aaaaaa; /* Gris para datos secundarios */
+    font-size: 0.9rem;
+}
+
+.rival strong {
+    color: #ffffff; /* Resalta más el nombre de Los Indios */
+}
+/* Estilos para la sección de Historia */
+.contenedor-historia {
+    display: flex;
+    gap: 30px; /* Deja un espacio de separación entre el texto y los números */
+    margin-top: 20px;
+}
+
+.texto-historia {
+    flex: 1; /* Hace que el texto ocupe el espacio que necesite de forma flexible */
+    line-height: 1.6; /* Separa un poco las líneas de texto para que sea más cómodo de leer */
+    color: white;
+}
+
+.datos-historicos {
+    display: flex;
+    gap: 20px; /* Separa las dos cajitas de números entre sí */
+}
+
+/* Las cajitas oscuras para los números (estilo la foto de referencia) */
+.caja-dato {
+    background-color: #141414;
+    border: 1px solid #262626;
+    padding: 30px;
+    border-radius: 6px;
+    text-align:center;
+    min-width: 100px;/* Asegura que la cajita tenga un ancho mínimo bonito */
+    
+    
+}
+
+/* El número gigante en blanco brillante */
+.numero-destacado {
+    font-size: 2rem;
+    font-weight:bold;
+    color: #ffffff;
+    display: block; /* Hace que el número se ponga arriba y el texto abajo */
+    margin-bottom: 5px;
+
+}
+
+/* El texto chiquito de abajo del número */
+.etiqueta-dato {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #888888; /* Gris más apagado para que resalte más el número */
+    text-transform: uppercase;
+}
+/* Estilos para la sección de Noticias */
+.contenedor-noticias {
+    display: flex;
+    flex-direction: column; /* Apila las noticias una debajo de la otra */
+    gap: 15px;              /* Deja espacio entre cada tarjeta de noticia */
+    margin-top: 20px;
+}
+
+/* Primero, definimos el tamaño de la foto */
+.foto-noticia {
+    width: 350px;       /* Aumentá este número para hacer la foto más ancha */
+    height: 220px;      /* Esto le da la altura fija */
+    object-fit: cover;  /* Importante: para que no se deforme al agrandar */
+    border-radius: 6px; /* Para que coincida con los bordes de la tarjeta */
+}
+
+/* Ajustamos la tarjeta para que la foto tenga más aire */
+.tarjeta-noticia {
+    background-color: #141414;
+    border: 1px solid #262626;
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    gap: 25px;          /* Un poquito más de espacio entre foto y texto */
+    align-items: flex-start; /* Alinea arriba para que se vea más ordenado */
+}
+
+/* Esto asegura que el texto no se achique demasiado al agrandar la foto */
+.info-noticia {
+    flex: 1;            /* Hace que el texto ocupe todo el espacio sobrante */
+}
+
+.fecha-noticia {
+    margin: 0;
+    color: #666666;           /* Gris más oscuro para la fecha sutil */
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+/* Estilos para el Pie de Página */
+.pie-pagina {
+    margin-top: 80px !important; /* El !important ayuda a pisar cualquier otro estilo */
+    padding-top: 50px;
+    border-top: 5px solid white /* Esto dibuja una línea roja que separa visualmente */
+}
+
+.contenido-footer {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;  /* Separa el nombre a la izquierda y el contacto a la derecha */
+    flex-wrap: wrap;                 /* Si la pantalla es chica, se acomoda abajo automáticamente */
+    gap: 30px;
+    
+}
+
+.info-club-footer h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+}
+
+.info-club-footer p {
+    color: #888888;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.datos-contacto-footer p {
+    margin: 0 0 8px 0;
+    color: #aaaaaa;
+    font-size: 0.9rem;
+}
+
+/* Línea final de copyright */
+.copyright {
+    text-align: center;
+    border-top: 1px solid #141414;
+    margin-top: 30px;
+    padding-top: 20px;
+}
+
+.copyright p {
+    margin: 0;
+    color: #555555;                  /* Gris oscuro para que no llame tanto la atención */
+    font-size: 0.8rem;
+}
+/* Controlar el tamaño del escudo en el menú */
+.imagen-logo {
+    width: 65px;         /* Lo subimos de 40px a 65px para que se note más */
+    height: auto;
+    object-fit: contain;
+}
+
+.logo-club {
+    display: flex;
+    align-items: center;
+    gap: 10px;           /* Separa el escudo del texto "LOS INDIOS" */
+}
+
+/* Controlar el tamaño de las fotos de las noticias */
+.foto-noticia {
+    width: 90px;         /* Mismo tamaño que tenía nuestro recuadro gris */
+    height: 90px;
+    object-fit: cover;   /* Corta y adapta la imagen para que sea un cuadrado perfecto sin deformarse */
+    border-radius: 4px;  /* Bordes levemente redondeados */
+    border: 1px solid #222222;
+}
+
+.seccion-contacto { 
+    padding: 60px 20px; /* Aumentamos el padding para separar */
+    margin-top: 40px;   /* Esto crea un margen físico entre bloques */
+    background-color:#141414; /* Un gris un poquito más claro que el negro de noticias */
+    border-top: 2px solid white; /* Una línea divisoria que queda muy bien */
+    color: white; 
+}
+.contenedor-contacto { display: flex; gap: 40px; max-width: 900px; margin: 0 auto; flex-wrap: wrap; }
+.formulario-contacto { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+.campo {
+    display: flex;
+    flex-direction: column; /* Pone el label arriba del input */
+}
+
+.formulario-contacto input, 
+.formulario-contacto textarea { 
+    width: 100%;             /* ¡IMPORTANTE: Ocupa todo el ancho! */
+    box-sizing: border-box;  /* Evita que el padding rompa el diseño */
+    padding: 12px; 
+    border-radius: 5px; 
+    border: none; 
+    background: #262626; 
+    color: white; 
+}
+.formulario-contacto button { 
+    padding: 12px; 
+    background-color: #ff3e3e; 
+    border: none; 
+    color: white; 
+    cursor: pointer; 
+    font-weight: bold; 
+    border-radius: 5px; 
+}
+.info-contacto { flex: 1; }
+.redes-sociales a { color: #ff3e3e; text-decoration: none; margin: 0 5px; }
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Estilo del Hero (Imagen de fondo a pantalla completa) */
+.hero {
+    height: 100vh;
+    background-image: url('imagenes/foto-cancha.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-overlay {
+    background: rgba(0, 0, 0, 0.6); /* Oscurece la foto para que el texto resalte */
+    padding: 2rem;
+    border-radius: 10px;
+}
+
+.hero h1 { font-size: 3.5rem; margin-bottom: 10px; }
+
+/* Estilo para la imagen en la sección Historia */
+.imagen-historia img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.5); /* Sombra pesada para que "salte" de la pantalla */
+    transition: transform 0.3s;
+}
+
+.imagen-historia img:hover {
+    transform: scale(1.02); /* Pequeño efecto al pasar el mouse */
+}
+/* --- ESTILOS SECCIÓN EQUIPO (Copia y pega solo esto) --- */
+
+.grilla-jugadores {
+    display: flex;
+    flex-wrap: wrap; /* Esto es lo que permite que se pongan una al lado de otra */
+    justify-content: center;
+    gap: 20px;
+}
+
+.tarjeta-jugador {
+    width: 250px;
+    height: 350px;
+    position: relative; /* ¡Fundamental para que el perfil se abra DENTRO de la tarjeta! */
+    overflow: hidden;
+    background: #141414;
+    border-radius: 8px;
+    text-align: center;
+}
+.tarjeta-jugador:hover {
+    transform: translateY(-5px);
+    border-color: #555555;
+}
+
+.perfil-jugador {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    padding: 10px;
+}
+
+.numero-camiseta {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.3rem;
+    color: white;
+}
+
+.foto-jugador {
+    width: 160px;      /* Aumentamos el tamaño de la foto */
+    height: 160px;     /* Mismo valor que width para que sea un círculo perfecto */
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #262626; /* Un borde un poquito más grueso destaca más */
+    margin: 10px auto 25px auto;
+    display: block;
+}
+.imagen-historia img {
+    filter: sepia(20%) contrast(1.1) brightness(0.9); /* Le da un tono de antigüedad */
+    border: 5px solid #ffffff; /* Un marco blanco clásico */
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.8);
+    transition: transform 0.3s;
+}
+.foto-jugador {
+    transition: transform 0.4s ease; /* Suaviza el movimiento */
+}
+
+.tarjeta-jugador:hover .foto-jugador {
+    transform: scale(1.1); /* La foto se agranda un poquito al pasar el mouse */
+}
+.enfrentamiento {
+    display: flex;
+    align-items: center; /* Centra verticalmente logo y texto */
+    gap: 10px;           /* Espacio entre logo y texto */
+    margin: 15px 0;
+    font-weight: bold;
+    color: white;
+}
+
+.logo-rival {
+    width: 60px;         /* Tamaño fijo para que todos sean iguales */
+    height: 60px;
+    object-fit: contain; /* Evita que el logo se deforme */
+}
+
+.vs {
+    color: #ff3e3e;      /* Un toque de color para el "vs" */
+    margin: 0 5px;
+}
+.contenedor-foto-cancha {
+    width: 100%;
+    height: 150px; /* Altura controlada para que no sea gigante */
+    overflow: hidden;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.foto-cancha {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Esto hace que la foto se recorte bien sin deformarse */
+    transition: transform 0.5s ease;
+}
+
+/* Efecto divertido: la foto se agranda un poco al pasar el mouse */
+.tarjeta-partido:hover .foto-cancha {
+    transform: scale(1.1);
+}
+.btn-mapa {
+    display: block;
+    background-color: white; /* Rojo del club */
+    color: black;
+    text-align: center;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.btn-mapa:hover {
+    background-color: white; /* Un rojo un poco más oscuro al pasar el mouse */
+}
+.seccion-streaming {
+    margin: 40px auto;
+    max-width: 900px;
+    padding: 20px;
+    text-align: center;
+}
+
+.tarjeta-streaming {
+    background: linear-gradient(145deg, #1c1c1c, #0a0a0a);
+    border: 1px solid #ff3e3e; /* Borde rojo para diferenciarlo */
+    padding: 30px;
+    border-radius: 12px;
+}
+
+.estado-en-vivo {
+    color: #ff3e3e;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    animation: parpadeo 1.5s infinite; /* ¡El punto parpadea como una cámara real! */
+}
+
+@keyframes parpadeo {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.btn-streaming {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 12px 25px;
+    background-color: #ff3e3e;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+section {
+    /* Ajusta los 80px a la altura real de tu barra de navegación */
+    padding-top: 80px; 
+    
+    /* Esto es para que el scroll se detenga justo antes del título */
+    margin-top: -80px; 
+}
+.redes-sociales {
+    display: flex; /* Los pone en fila */
+    justify-content:left; /* Los centra en la sección */
+    gap: 25px; /* Espacio entre cada logo */
+    margin-top: 15px;
+}
+
+/* Estilo para cada imagen */
+.icono-red {
+    width: 60px; /* Tamaño del logo */
+    height: 60px;
+    transition: transform 0.3s ease; /* Para que el movimiento sea suave */
+    
+}
+
+/* Efecto al pasar el mouse */
+.icono-red:hover {
+    transform: scale(1.1); /* Agranda un poquito el logo al pasar el mouse */
+    filter: brightness(0.8); /* Los oscurece un poco al pasar el mouse */
+}
+/* --- ESTILO DEL BOTÓN DE WHATSAPP FLOTANTE --- */
+.btn-whatsapp-flotante {
+    position: fixed; /* 👈 ESTA ES LA CLAVE: Lo fija a la pantalla */
+    bottom: 20px;    /* Distancia desde el borde inferior */
+    right: 20px;     /* Distancia desde el borde derecho */
+    
+   
+    
+    border-radius: 50%; /* Lo hace redondo */
+    width: 60px;       /* Tamaño del botón */
+    height: 60px;
+    
+    display: flex;     /* Para centrar el icono adentro */
+    align-items: center;
+    justify-content: center;
+    
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); /* Sombra para que flote */
+    z-index: 100;      /* Asegura que esté por encima de todo */
+    
+    transition: all 0.3s ease; /* Para que los efectos sean suaves */
+}
+
+/* Efecto al pasar el mouse */
+.btn-whatsapp-flotante:hover {
+    background-color:green; /* Un verde más oscuro */
+    transform: scale(1.1);       /* Lo agranda un poquito */
+}
+
+/* Estilo para el icono dentro del botón */
+.icono-whatsapp-fijo {
+    width: 35px; /* Tamaño del icono */
+    height: 35px;
+}
+#lista-productos {
+    display: flex;         /* Activa el diseño en fila */
+    flex-wrap: wrap;       /* Esto es la clave: hace que bajen a la siguiente línea si no entran */
+    justify-content: center; /* Centra las tarjetas en la pantalla */
+    gap: 20px;             /* Espacio entre cada tarjeta */
+    padding: 20px;
+}
+
+.producto {
+    width: 250px;          /* Define un ancho fijo para cada tarjeta */
+    border: 1px solid #555;
+    padding: 15px;
+    border-radius: 12px;
+    background-color:#0a0a0a;
+    color: white;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+/* Y no olvides tu efecto de zoom */
+.producto:hover {
+    transform: scale(1.05);
+}
+
+.producto img {
+    width: 100%;        /* La imagen ocupará el 100% del ancho del recuadro */
+    max-width: 200px;   /* Opcional: define un tamaño máximo fijo */
+    height: auto;       /* Esto mantiene la proporción de la foto para que no se estire */
+    border-radius: 8px; /* Para que las puntas sigan redondeadas */
+    display: block;
+    margin: 0 auto 10px auto; /* Centra la imagen y da un pequeño espacio abajo */
+    
+}
+.producto button {
+    background-color:#ddd;
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Esto asegura que la tienda no se meta en la columna del contacto */
+#seccion-tienda {
+    width: 100%;
+    margin-top: 30px;
+    clear: both; /* Esto obliga a que la tienda se coloque debajo de los bloques anteriores */
+}
+
+/* Esto asegura que los productos se vean bien */
+#lista-productos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+/* Estilo base del icono del carrito en la barra de navegación */
+.carrito-icono {
+    cursor: pointer;
+    position: relative;
+    margin-left: 20px;
+   
+}
+
+
+#formulario-pedido {
+    display: none; /* Se mantiene oculto al inicio */
+    background: #181818;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 1px solid #333;
+}
+
+#formulario-pedido input, #formulario-pedido select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#formulario-pedido button {
+    margin-right: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.contenedor-principal {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Obliga a la página a medir al menos el 100% de la pantalla */
+}
+
+/* El área del carrito y productos debe expandirse */
+.contenido-flexible {
+    flex: 1; /* Esto empuja al footer hacia el fondo */
+    width: 100%;
+    max-width: 1200px; /* Ajusta según el diseño de tu web */
+    margin: 0 auto;
+}
+
+/* Estilo para que el carrito no se vea comprimido */
+#seccion-carrito {
+    width: 100%;
+    padding: 15px;
+    background: #1a1a1a;
+}
+.producto, li {
+    transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el mouse por encima del botón de comprar */
+button:hover {
+    transform: scale(1.05); /* El botón crece un poquito */
+    background-color: #ff3e3e; /* Un rojo más brillante */
+    cursor: pointer;
+}
