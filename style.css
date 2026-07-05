@@ -7,6 +7,22 @@ body {
     margin: 0;
     padding: 0;
 }
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    
+    /* Por ejemplo, haz que tus imágenes no se desborden */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* Si tienes columnas, puedes apilarlas una debajo de otra */
+    .contenedor {
+        display: block;
+    }
+}
 /* Estilos para la barra de navegación superior */
 .barra-navegacion {
     background-color: #000000;
