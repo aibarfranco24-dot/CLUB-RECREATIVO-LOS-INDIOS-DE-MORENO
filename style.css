@@ -559,7 +559,7 @@ section {
    
     
     border-radius: 50%; /* Lo hace redondo */
-    width: 60px;       /* Tamaño del botón */
+    width: 95px;       /* Tamaño del botón */
     height: 60px;
     
     display: flex;     /* Para centrar el icono adentro */
@@ -567,7 +567,7 @@ section {
     justify-content: center;
     
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); /* Sombra para que flote */
-    z-index: 100;      /* Asegura que esté por encima de todo */
+    z-index: 9999;      /* Asegura que esté por encima de todo */
     
     transition: all 0.3s ease; /* Para que los efectos sean suaves */
 }
@@ -701,4 +701,94 @@ button:hover {
     transform: scale(1.05); /* El botón crece un poquito */
     background-color: #ff3e3e; /* Un rojo más brillante */
     cursor: pointer;
+}
+/* --- ESTILO MÓVIL (PANTALLAS MENORES A 768px) --- */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    /* 1. Barra de navegación: Logo a la izquierda, Hamburguesa a la derecha */
+   .barra-navegacion {
+        /* Mantenemos el fixed pero forzamos el ancho */
+        position: fixed !important; 
+        top: 0;
+        left: 0;
+        width: 92% !important; /* ¡ESTO ES LO QUE FALTA! */
+        height: auto;
+        z-index: 9999;
+        background-color: #000;
+        
+        /* Aseguramos la alineación interna */
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 20px !important; /* Ajusta los laterales si necesitas más espacio */
+        box-sizing: border-box !important; /* IMPORTANTE para que el padding no desborde */
+    }
+    .menu-hamburguesa {
+        display: block !important;
+        cursor: pointer;
+        color: white;
+        font-size: 30px;
+        padding: 10px;
+        position: relative;
+    }
+
+    /* 2. Menú desplegable alineado a la izquierda */
+    .menu-enlaces {
+        display: none; 
+        flex-direction: column;
+        width: 100%;
+        background-color: #000;
+        position: absolute; /* Cambiamos a absolute para que se despliegue sobre el contenido */
+        top: 60px;          /* Ajusta este valor según la altura de tu barra */
+        left: 0;
+        z-index: 1000;
+        align-items: flex-start !important; 
+        text-align: left !important;
+        padding-left: 20px;
+    }
+
+    .menu-enlaces.activo {
+        display: flex !important;
+    }
+
+    .menu-enlaces li, .menu-enlaces a {
+        width: 100%;
+        text-align: left !important;
+        padding: 10px 0;
+    }
+
+    /* 3. Ajuste de secciones */
+    .hero, .equipo, #equipo, .partidos, #partidos, .contenedor-noticias, .tarjeta-partido {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        padding: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* ESTILO ESPECÍFICO PARA HISTORIA (Para que no quede comprimida) */
+    .historia h2 .historia, #historia {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        display: block !important; /* Cambiamos de flex a block */
+        width: 100% !important;
+        padding: 20px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Si tienes columnas dentro de historia, dales ancho completo */
+    .historia .columna, .historia > div {
+        width: 100% !important;
+        display: block !important;
+        margin-bottom: 15px;
+    }
+
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
 }

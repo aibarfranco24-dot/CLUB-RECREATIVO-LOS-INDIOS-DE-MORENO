@@ -30,7 +30,10 @@
             <img src="imagenes/escudo-los-indios.png" alt="Escudo Club Los Indios de Moreno" class="imagen-logo">
             <span>CRLIM</span>
         </div>
-        <ul class="menu-enlaces">
+         <div class="menu-hamburguesa" id="btn-menu">
+        &#9776;
+    </div>
+        <ul class="menu-enlaces" id="menu-desplegable" >
             <!-- Ahora el inicio apunta a index.html y Equipo tiene la clase 'activo' -->
             <li><a href="index.html">Inicio</a></li>
             <li><a href="index.html#historia">Historia</a></li>
@@ -148,6 +151,38 @@
 </div> 
 </section>
  </main>
+
+<script>
+
+    const btnMenu = document.getElementById('btn-menu');
+    const menuDesplegable = document.getElementById('menu-desplegable');
+    // Seleccionamos todos los enlaces dentro del menú
+    const enlacesMenu = document.querySelectorAll('.menu-enlaces a');
+
+    // 1. Abrir/Cerrar al hacer clic en las tres rayas
+    btnMenu.addEventListener('click', () => {
+        menuDesplegable.classList.toggle('activo');
+    });
+
+    // 2. NUEVO: Cerrar el menú al hacer clic en cualquier enlace
+    enlacesMenu.forEach(enlace => {
+        enlace.addEventListener('click', () => {
+            menuDesplegable.classList.remove('activo');
+        });
+    });
+
+
+    // 2. Script para los perfiles de jugador (el que ya tenías)
+    function togglePerfil(boton) {
+        const tarjeta = boton.closest('.tarjeta-jugador');
+        const perfil = tarjeta.querySelector('.perfil-jugador');
+        if (perfil.style.display === 'none' || perfil.style.display === '') {
+            perfil.style.display = 'flex';
+        } else {
+            perfil.style.display = 'none';
+        }
+    }
+</script>
 
 </body>
 </html>
