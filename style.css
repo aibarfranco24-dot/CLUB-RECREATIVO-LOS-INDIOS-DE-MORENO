@@ -770,25 +770,87 @@ button:hover {
         box-sizing: border-box !important;
     }
 
-    /* ESTILO ESPECÍFICO PARA HISTORIA (Para que no quede comprimida) */
-    .historia h2 .historia, #historia {
-        margin-top: 40px;
-        margin-bottom: 20px;
-        display: block !important; /* Cambiamos de flex a block */
+@media (max-width: 768px) {
+    /* 1. Aseguramos que la sección no se comprima */
+    .historia {
+        display: block !important;
         width: 100% !important;
         padding: 20px !important;
         box-sizing: border-box !important;
     }
-    
-    /* Si tienes columnas dentro de historia, dales ancho completo */
-    .historia .columna, .historia > div {
-        width: 100% !important;
-        display: block !important;
-        margin-bottom: 15px;
+
+    .titulo-historia, #historia h2 {
+        margin-top: 50px !important;
+        margin-bottom: 30px !important;
     }
 
-    img {
-        max-width: 100% !important;
+    .texto-historia p {
+        margin-top: 25px !important;
+        margin-bottom: 5px !important;
+        line-height: 1.6;
+    }
+
+    /* 2. El contenedor padre debe ser columna para apilar bloques */
+    .contenedor-historia {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    /* 3. Aquí forzamos las estadísticas a estar una al lado de la otra */
+   .datos-historicos {
+        display: flex !important;
+        flex-direction: row !important; /* <--- Esto debe ponerlos uno al lado del otro */
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 5px !important; /* Espacio pequeño entre las cajas */
+        flex-wrap: wrap;
+    }
+    
+
+    /* 4. Cada cajita de dato ocupa casi la mitad */
+    .caja-dato {
+        width: 48% !important;
+        text-align: center;
+        background-color: #1a1a1a;
+        padding: 10px !important;
+        border-radius: 5px;
+        box-sizing: border-box;
+        width: 48% !important; 
+       width: 48% !important; /* <--- Ajusta a 45% si aun se apilan */
+        display: block !important;
+        text-align: center;
+    }
+
+    /* 5. Asegurar que la imagen no se desborde */
+    .imagen-historia img {
+        width: 100% !important;
         height: auto !important;
     }
-}
+} 
+.datos-historicos {
+        display: flex !important;
+        flex-direction: row !important;
+        width: 100% !important;
+        gap: 10px !important;
+        /* Esto asegura que ambos ocupen lo mismo */
+        align-items: stretch !important; 
+    }
+
+    /* 2. Propiedades idénticas para ambas cajas */
+    .caja-dato {
+        flex: 1 !important; /* IMPORTANTE: Esto hace que ambos ocupen el 50% exacto */
+        width: 100% !important; 
+        text-align: center;
+        background-color: #1a1a1a;
+        padding: 20px 10px !important; /* Relleno igual para ambos */
+        border-radius: 5px;
+        box-sizing: border-box !important; /* Asegura que el padding no los agrande de más */
+    }
+   #partidos h2 {
+        margin-top: 60px !important;  /* Ajusta este valor para bajarlo más o menos */
+        margin-bottom: 20px !important;
+        display: block !important;
+        width: 100% !important;
+    }
+}/* <--- ESTA LLAVE CIERRA EL @media CORRECTAMENTE */
