@@ -702,6 +702,91 @@ button:hover {
     background-color: #ff3e3e; /* Un rojo más brillante */
     cursor: pointer;
 }
+.btn-eliminar {
+    background: transparent;
+    border: none;
+    color: #ff4d4d;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 5px;
+}
+
+.btn-eliminar:hover {
+    color: grey; /* Rojo más fuerte al pasar el mouse */
+    transform: scale(1.1); /* Un pequeño efecto de aumento al pasar el mouse */
+}
+button.control-cantidad {
+    padding: 2px 8px;
+    margin: 0 5px;
+    cursor: pointer;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+.btn-control {
+    background: #333; /* Fondo gris oscuro */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.btn-control:hover {
+    background: #555; /* Un gris más claro al pasar el mouse */
+}
+.item-carrito {
+    display: flex;
+    justify-content: space-between; /* Nombre a la izquierda, controles a la derecha */
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px;
+    flex-wrap: wrap; /* Si es muy angosto, se acomoda */
+}
+.controles {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre -, número, + y tacho */
+}
+
+/* Estilo para que el número se vea bien */
+.cantidad {
+    font-weight: bold;
+    min-width: 25px;
+    text-align: center;
+}
+
+/* Botones + y - */
+.btn-control {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* --- ESTILO MÓVIL (PANTALLAS MENORES A 768px) --- */
 @media (max-width: 768px) {
     body {
@@ -727,15 +812,20 @@ button:hover {
         padding: 10px 20px !important; /* Ajusta los laterales si necesitas más espacio */
         box-sizing: border-box !important; /* IMPORTANTE para que el padding no desborde */
     }
+}
     .menu-hamburguesa {
-        display: block !important;
+        display: none !important;
         cursor: pointer;
         color: white;
         font-size: 30px;
         padding: 10px;
         position: relative;
     }
-
+    @media (max-width: 768px) {
+    .menu-hamburguesa {
+        display: block !important;
+    }
+    
     /* 2. Menú desplegable alineado a la izquierda */
     .menu-enlaces {
         display: none; 

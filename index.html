@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club Recreativo los indios de moreno</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <body>
@@ -298,7 +299,7 @@
 
 
 <script>
-    // 1. Estado inicial
+// 1. Estado inicial
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
 // 2. Función para pintar el carrito en pantalla
@@ -311,15 +312,25 @@ function renderizarCarrito() {
     let total = 0;
 
     carrito.forEach((prod, index) => {
-        total += prod.precio;
+        total += (prod.precio * prod.cantidad);
         
         if (lista) {
             const li = document.createElement('li');
-            li.innerHTML = `
-                ${prod.nombre} - $${prod.precio.toFixed(2)} 
-                <button onclick="eliminarProducto(${index})" style="margin-left:10px; cursor:pointer;">X</button>
-            `;
-            lista.appendChild(li);
+          li.innerHTML = `
+    <div class="item-carrito">
+        <span class="nombre-producto">${prod.nombre} - $${(prod.precio * prod.cantidad).toFixed(2)}</span>
+        
+        <div class="controles">
+            <button onclick="cambiarCantidad(${index}, -1)" class="btn-control">-</button>
+            <span class="cantidad">${prod.cantidad}</span>
+            <button onclick="cambiarCantidad(${index}, 1)" class="btn-control">+</button>
+            <button onclick="eliminarProducto(${index})" class="btn-eliminar">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </div>
+    </div>
+`;
+lista.appendChild(li);
         }
     });
 
@@ -329,26 +340,50 @@ function renderizarCarrito() {
     localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
+// Función para ajustar cantidades
+function cambiarCantidad(index, delta) {
+    const prod = carrito[index];
+    
+    // Si queremos sumar (delta 1) y llegamos al tope
+    if (delta === 1 && prod.cantidad >= prod.stock) {
+        Swal.fire({ icon: 'warning', title: 'Agotado', text: 'Has alcanzado el límite de stock.', background: '#1a1a1a', color: '#ffffff' });
+        return;
+    }
+
+    prod.cantidad += delta;
+    if (prod.cantidad <= 0) {
+        eliminarProducto(index);
+    } else {
+        renderizarCarrito();
+    }
+}
+
 function eliminarProducto(index) {
     carrito.splice(index, 1); 
     renderizarCarrito();
 }
 
-// 3. Función para agregar productos con alerta moderna
-function agregarAlCarrito(nombre, precio) {
-    carrito.push({ nombre: nombre, precio: parseFloat(precio) });
+// 3. Función para agregar productos
+function agregarAlCarrito(nombre, precio, stockDisponible) {
+    const productoExistente = carrito.find(p => p.nombre === nombre);
+    const cantidadActual = productoExistente ? productoExistente.cantidad : 0;
+
+    if (cantidadActual + 1 > stockDisponible) {
+        Swal.fire({ icon: 'error', title: 'Sin stock', text: 'No hay más unidades disponibles.', background: '#1a1a1a', color: '#ffffff' });
+        return;
+    }
+
+    if (productoExistente) {
+        productoExistente.cantidad += 1;
+    } else {
+        carrito.push({ nombre: nombre, precio: parseFloat(precio), cantidad: 1, stock: stockDisponible });
+    }
+    
     renderizarCarrito();
     
-    // Alerta estilo Toast moderno
     Swal.fire({
-        toast: true,
-        position: 'top-end',
-        icon: 'success',
-        title: `${nombre} agregado`,
-        showConfirmButton: false,
-        timer: 1500,
-        background: '#1a1a1a',
-        color: '#ffffff'
+        toast: true, position: 'top-end', icon: 'success', title: `${nombre} agregado`,
+        showConfirmButton: false, timer: 1500, background: '#1a1a1a', color: '#ffffff'
     });
 }
 
@@ -369,10 +404,11 @@ fetch('http://localhost:3000/productos')
         prods.forEach(p => {
             contenedor.innerHTML += `
                 <div class="producto">
-                    <img src="imagenes/${p.imagen}" alt="${p.nombre}" style="width: 150px;"> 
+                    <img src="imagenes/${p.imagen}" alt="${p.nombre}" style="width: 150px; display: block; margin: 0 auto;"> 
                     <h3>${p.nombre}</h3>
+                    <p>Disponibles: ${p.stock}</p> 
                     <p>$${p.precio}</p>
-                    <button onclick="agregarAlCarrito('${p.nombre}', ${p.precio})">Comprar</button>
+                    <button onclick="agregarAlCarrito('${p.nombre}', ${p.precio}, ${p.stock})">Comprar</button>
                 </div>
             `;
         });
@@ -382,27 +418,21 @@ fetch('http://localhost:3000/productos')
 // 6. Finalizar compra
 function finalizarCompra() {
     if (carrito.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Oops...',
-            text: 'Tu carrito está vacío.',
-            background: '#1a1a1a',
-            color: '#ffffff'
-        });
+        Swal.fire({ icon: 'warning', title: 'Oops...', text: 'Tu carrito está vacío.', background: '#1a1a1a', color: '#ffffff' });
         return;
     }
     document.getElementById('formulario-pedido').style.display = 'block';
     document.getElementById('btn-finalizar').style.display = 'none'; 
 }
+
 function toggleDireccion() {
     const metodo = document.getElementById('metodo-entrega').value;
     const contenedorDireccion = document.getElementById('contenedor-direccion');
-    
     if (metodo === 'envio') {
-        contenedorDireccion.style.display = 'block'; // Aparece
+        contenedorDireccion.style.display = 'block';
     } else {
-        contenedorDireccion.style.display = 'none';  // Desaparece
-        document.getElementById('direccion-cliente').value = ''; // Limpiamos el valor por seguridad
+        contenedorDireccion.style.display = 'none';
+        document.getElementById('direccion-cliente').value = '';
     }
 }
 
@@ -417,26 +447,19 @@ function confirmarPedido() {
     const metodo = document.getElementById('metodo-entrega').value;
     const direccion = document.getElementById('direccion-cliente').value;
 
-    // Solo validamos la dirección si el método es 'envio'
     if (!nombre || !telefono) {
         Swal.fire({ icon: 'error', text: 'Completa nombre y teléfono.' });
         return;
     }
-    
     if (metodo === 'envio' && !direccion) {
-        Swal.fire({ icon: 'error', text: 'Por favor ingresa tu dirección para el envío.' });
+        Swal.fire({ icon: 'error', text: 'Por favor ingresa tu dirección.' });
         return;
     }
 
-    // Aquí construirías el mensaje final
-    console.log("Pedido realizado:", { nombre, telefono, metodo, direccion });
-
     Swal.fire({
         title: '¡Compra confirmada!',
-        text: `Gracias ${nombre}. Recibirás un mensaje al ${telefono} cuando tu pedido esté listo para ${metodo === 'retiro' ? 'retiro en el club' : 'envío a domicilio'}.`,
-        icon: 'success',
-        background: '#1a1a1a',
-        color: '#ffffff'
+        text: `Gracias ${nombre}. Recibirás un mensaje al ${telefono}.`,
+        icon: 'success', background: '#1a1a1a', color: '#ffffff'
     });
 
     vaciarCarrito();
