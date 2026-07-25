@@ -699,20 +699,20 @@ section {
 /* Efecto al pasar el mouse por encima del botón de comprar */
 button:hover {
     transform: scale(1.05); /* El botón crece un poquito */
-    background-color: #ff3e3e; /* Un rojo más brillante */
+    background-color: grey; /* Un rojo más brillante */
     cursor: pointer;
 }
 .btn-eliminar {
     background: transparent;
     border: none;
-    color: #ff4d4d;
+    color: white;
     cursor: pointer;
     font-size: 18px;
     padding: 5px;
 }
 
 .btn-eliminar:hover {
-    color: grey; /* Rojo más fuerte al pasar el mouse */
+    color: white; /* Rojo más fuerte al pasar el mouse */
     transform: scale(1.1); /* Un pequeño efecto de aumento al pasar el mouse */
 }
 button.control-cantidad {
@@ -767,6 +767,32 @@ button.control-cantidad {
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 4px;
+}
+#btn-finalizar {
+    background-color: white; /* Verde llamativo para destacar la acción */
+    color: black;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    width: 100%; /* Si quieres que ocupe todo el ancho del carrito */
+    max-width: 250px; /* O puedes quitar el width y max-width si lo prefieres chico */
+}
+
+/* Efecto cuando pasan el mouse por encima */
+#btn-finalizar:hover {
+    background-color: grey;
+    transform: translateY(-2px); /* Pequeño salto hacia arriba */
+}
+
+/* Efecto al hacer clic */
+#btn-finalizar:active {
+    transform: translateY(0);
 }
 
 
