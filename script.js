@@ -91,14 +91,15 @@ function vaciarCarrito() {
     renderizarCarrito();
 }
 
-// 5. Carga de productos (Fetch)
-fetch('http://localhost:3000/productos')
+// 5. Carga de productos desde el archivo JSON local
+fetch('productos.json')
     .then(res => res.json())
     .then(prods => {
         const contenedor = document.getElementById('lista-productos');
         if (!contenedor) return;
         
         contenedor.innerHTML = '';
+        prods.exports = prods; // o simplemente el foreach:
         prods.forEach(p => {
             contenedor.innerHTML += `
                 <div class="producto">
@@ -112,7 +113,6 @@ fetch('http://localhost:3000/productos')
         });
     })
     .catch(err => console.error('Error al cargar productos:', err));
-
 // 6. Finalizar compra
 function finalizarCompra() {
     if (carrito.length === 0) {
