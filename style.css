@@ -794,6 +794,13 @@ button.control-cantidad {
 #btn-finalizar:active {
     transform: translateY(0);
 }
+.botones-formulario {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+
 
 
 

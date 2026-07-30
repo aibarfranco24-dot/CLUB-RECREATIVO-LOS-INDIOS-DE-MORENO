@@ -99,7 +99,6 @@ fetch('productos.json')
         if (!contenedor) return;
         
         contenedor.innerHTML = '';
-        prods.exports = prods; // o simplemente el foreach:
         prods.forEach(p => {
             contenedor.innerHTML += `
                 <div class="producto">
@@ -113,7 +112,8 @@ fetch('productos.json')
         });
     })
     .catch(err => console.error('Error al cargar productos:', err));
-// 6. Finalizar compra
+
+// 6. Finalizar compra y manejo del formulario
 function finalizarCompra() {
     if (carrito.length === 0) {
         Swal.fire({ icon: 'warning', title: 'Oops...', text: 'Tu carrito está vacío.', background: '#1a1a1a', color: '#ffffff' });
@@ -126,11 +126,15 @@ function finalizarCompra() {
 function toggleDireccion() {
     const metodo = document.getElementById('metodo-entrega').value;
     const contenedorDireccion = document.getElementById('contenedor-direccion');
-    if (metodo === 'envio') {
-        contenedorDireccion.style.display = 'block';
-    } else {
-        contenedorDireccion.style.display = 'none';
-        document.getElementById('direccion-cliente').value = '';
+    
+    if (contenedorDireccion) {
+        if (metodo === 'envio') {
+            contenedorDireccion.style.display = 'block';
+        } else {
+            contenedorDireccion.style.display = 'none';
+            const inputDir = document.getElementById('direccion-cliente');
+            if (inputDir) inputDir.value = ''; 
+        }
     }
 }
 
@@ -139,37 +143,51 @@ function cerrarFormulario() {
     document.getElementById('btn-finalizar').style.display = 'inline-block';
 }
 
-
 function confirmarPedido() {
-    const nombre = document.getElementById('nombre-cliente').value;
-    const telefono = document.getElementById('telefono-cliente').value;
+    const nombre = document.getElementById('nombre-cliente').value.trim();
+    const telefono = document.getElementById('telefono-cliente').value.trim();
     const metodo = document.getElementById('metodo-entrega').value;
-    const direccion = document.getElementById('direccion-cliente').value;
+    const direccionInput = document.getElementById('direccion-cliente');
+    const direccion = direccionInput ? direccionInput.value.trim() : '';
+    
+    const numeroTarjeta = document.getElementById('tarjeta-numero') ? document.getElementById('tarjeta-numero').value.trim() : '';
+    const expiracion = document.getElementById('tarjeta-fecha') ? document.getElementById('tarjeta-fecha').value.trim() : '';
+    const cvv = document.getElementById('tarjeta-cvv') ? document.getElementById('tarjeta-cvv').value.trim() : '';
 
-    if (!nombre || !telefono) {
-        Swal.setItem ? null : Swal.fire({ icon: 'error', text: 'Completa nombre y teléfono.' });
+    if (!nombre || !telefono || !numeroTarjeta || !expiracion || !cvv) {
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Campos incompletos', 
+            text: 'Por favor completa todos los datos personales y de pago.', 
+            background: '#1a1a1a', 
+            color: '#ffffff' 
+        });
         return;
     }
+
     if (metodo === 'envio' && !direccion) {
-        Swal.fire({ icon: 'error', text: 'Por favor ingresa tu dirección.' });
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Dirección faltante', 
+            text: 'Por favor ingresa tu dirección para el envío a domicilio.', 
+            background: '#1a1a1a', 
+            color: '#ffffff' 
+        });
         return;
     }
 
-    // Armamos el detalle de los productos para el mensaje
     let detalleProductos = carrito.map(p => `${p.cantidad}x ${p.nombre} ($${p.precio * p.cantidad})`).join(', ');
     let totalCompra = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
 
-    // Datos que se envían a Formspree (reemplaza 'TU_FORM_ID' por tu código real de Formspree)
     const datosFormulario = {
         nombre: nombre,
         telefono: telefono,
         metodoEntrega: metodo,
-        direccion: direccion || 'Retira en el club',
+        direccion: metodo === 'envio' ? direccion : 'Retira en el club',
         productos: detalleProductos,
         total: `$${totalCompra}`
     };
 
-    // Envío por fetch a Formspree
     fetch('https://formspree.io/f/xlgylaqy', {
         method: 'POST',
         headers: {
@@ -196,4 +214,40 @@ function confirmarPedido() {
         console.error('Error:', error);
         Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo conectar con el servidor.', background: '#1a1a1a', color: '#ffffff' });
     });
+}   
+
+// 7. Función para el menú hamburguesa y cierre automático
+function toggleMenu() {
+    const menu = document.getElementById('menu-desplegable');
+    if (menu) {
+        menu.classList.toggle('activo');
+    }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Cerrar menú al hacer clic en un enlace
+    const enlacesMenu = document.querySelectorAll('#menu-desplegable a');
+    const menu = document.getElementById('menu-desplegable');
+
+    enlacesMenu.forEach(enlace => {
+        enlace.addEventListener('click', () => {
+            if (menu && menu.classList.contains('activo')) {
+                menu.classList.remove('activo');
+            }
+        });
+    });
+
+    // Restringir campos de texto para que solo admitan números
+    const idsNumericos = ['telefono-cliente', 'tarjeta-numero', 'tarjeta-fecha', 'tarjeta-cvv'];
+    
+    idsNumericos.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        }
+    });
+    
+    renderizarCarrito();
+});

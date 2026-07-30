@@ -17,7 +17,7 @@
             <span>CRLIM</span>
         </div>
 
-        <div class="menu-hamburguesa" id="btn-menu">
+        <div class="menu-hamburguesa" id="btn-menu" onclick="toggleMenu()">
         &#9776;
     </div>
 
@@ -237,30 +237,33 @@
     
     <button id="btn-finalizar" onclick="finalizarCompra()">Finalizar Compra</button>
     
-   <div id="formulario-pedido" style="display:none;">
-    <h3>Datos de entrega y pago</h3>
-    
-    <input type="text" id="nombre-cliente" placeholder="Nombre completo">
-    <input type="text" id="telefono-cliente" placeholder="Teléfono de contacto">
-    
-  <select id="metodo-entrega" onchange="toggleDireccion()">
-    <option value="retiro">Retiro en el club</option>
-    <option value="envio">Envío a domicilio</option>
-</select>
+    <div id="formulario-pedido" style="display:none;">
+        <h3>Datos de entrega y pago</h3>
+        
+        <input type="text" id="nombre-cliente" placeholder="Nombre completo">
+        <input type="text" id="telefono-cliente" inputmode="numeric" pattern="[0-9]*" placeholder="Teléfono de contacto">
+        
+        <select id="metodo-entrega" onchange="toggleDireccion()">
+            <option value="retiro">Retiro en el club</option>
+            <option value="envio">Envío a domicilio</option>
+        </select>
 
-<div id="contenedor-direccion" style="display: none;">
-    <input type="text" id="direccion-cliente" placeholder="Dirección de envío">
-</div>
-    
-    <input type="text" id="tarjeta-numero" placeholder="Número de tarjeta">
-    <div style="display:flex; gap: 10px;">
-        <input type="text" id="tarjeta-fecha" placeholder="MM/AA">
-        <input type="text" id="tarjeta-cvv" placeholder="CVV">
+        <div id="contenedor-direccion" style="display: none;">
+            <input type="text" id="direccion-cliente" placeholder="Dirección de envío">
+        </div>
+        
+        <input type="text" id="tarjeta-numero" inputmode="numeric" pattern="[0-9]*" placeholder="Número de tarjeta">
+        
+        <div style="display:flex; gap: 10px;">
+            <input type="text" id="tarjeta-fecha" inputmode="numeric" pattern="[0-9]*" placeholder="MM/AA">
+            <input type="text" id="tarjeta-cvv" inputmode="numeric" pattern="[0-9]*" placeholder="CVV">
+        </div>
+
+        <div class="botones-formulario">
+            <button type="button" class="btn-confirmar" onclick="confirmarPedido()">Confirmar Pedido</button>
+            <button type="button" class="btn-cancelar" onclick="cerrarFormulario()">Cancelar</button>
+        </div>
     </div>
-
-    <button onclick="confirmarPedido()">Confirmar Pedido</button>
-    <button onclick="cerrarFormulario()">Cancelar</button>
-</div>
 </section>
 
 
