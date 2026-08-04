@@ -800,6 +800,53 @@ button.control-cantidad {
     margin-top: 15px;
 }
 
+.select-talle {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border: 1px solid #333;
+    
+    /* CAMBIOS DE TAMAÑO */
+    padding: 6px 30px 6px 10px; /* Reducido para que sea más bajo */
+    max-width: 120px; /* Ancho máximo para que no ocupe todo el ancho de la tarjeta */
+    margin: 0 auto 10px auto; /* Centrado dentro de la tarjeta de producto */
+    display: block; /* Necesario para que el margin auto funcione */
+    
+    border-radius: 5px;
+    font-size: 13px; /* Letra un poco más chica */
+    cursor: pointer;
+    outline: none;
+    box-sizing: border-box;
+    
+    text-align: center;
+    text-align-last: center;
+    
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px; /* Flecha más pequeña */
+    
+    transition: border-color 0.3s ease;
+}
+
+.select-talle:hover,
+.select-talle:focus {
+    border-color: #555;
+}
+
+.select-talle option {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    padding: 8px;
+    text-align: center;
+}
+
+
+
+
 
 
 
@@ -824,54 +871,51 @@ button.control-cantidad {
 @media (max-width: 768px) {
     body {
         overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        width: 100%;
     }
 
-    /* 1. Barra de navegación: Logo a la izquierda, Hamburguesa a la derecha */
-   .barra-navegacion {
-        /* Mantenemos el fixed pero forzamos el ancho */
+    /* 1. Barra de navegación */
+    .barra-navegacion {
         position: fixed !important; 
         top: 0;
         left: 0;
-        width: 92% !important; /* ¡ESTO ES LO QUE FALTA! */
+        width: 100% !important; 
         height: auto;
         z-index: 9999;
         background-color: #000;
-        
-        /* Aseguramos la alineación interna */
         display: flex !important;
         flex-direction: row !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 10px 20px !important; /* Ajusta los laterales si necesitas más espacio */
-        box-sizing: border-box !important; /* IMPORTANTE para que el padding no desborde */
+        padding: 10px 20px !important;
+        box-sizing: border-box !important;
     }
-}
+
     .menu-hamburguesa {
-        display: none !important;
+        display: block !important;
         cursor: pointer;
         color: white;
         font-size: 30px;
         padding: 10px;
         position: relative;
     }
-    @media (max-width: 768px) {
-    .menu-hamburguesa {
-        display: block !important;
-    }
     
-    /* 2. Menú desplegable alineado a la izquierda */
+    /* Menú desplegable */
     .menu-enlaces {
         display: none; 
         flex-direction: column;
         width: 100%;
         background-color: #000;
-        position: absolute; /* Cambiamos a absolute para que se despliegue sobre el contenido */
-        top: 60px;          /* Ajusta este valor según la altura de tu barra */
+        position: absolute;
+        top: 60px;
         left: 0;
         z-index: 1000;
         align-items: flex-start !important; 
         text-align: left !important;
         padding-left: 20px;
+        box-sizing: border-box;
     }
 
     .menu-enlaces.activo {
@@ -884,27 +928,56 @@ button.control-cantidad {
         padding: 10px 0;
     }
 
-    /* 3. Ajuste de secciones */
+    /* 2. Títulos y Secciones centrados perfectamente */
+    h2, .titulo-productos, .titulo-historia, #historia h2, #partidos h2 {
+        text-align: center !important;
+        width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+    }
+
     .hero, .equipo, #equipo, .partidos, #partidos, .contenedor-noticias, .tarjeta-partido {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
         padding: 10px !important;
         box-sizing: border-box !important;
+        align-items: center !important;
     }
 
-@media (max-width: 768px) {
-    /* 1. Aseguramos que la sección no se comprima */
+    /* 3. Tarjetas de productos y contenedor centrados */
+    #lista-productos, .productos-container, .seccion-productos {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        box-sizing: border-box !important;
+        padding: 0 15px !important;
+    }
+
+    .producto {
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 300px;
+        box-sizing: border-box !important;
+    }
+
+    .select-talle {
+        margin: 0 auto 10px auto !important;
+    }
+
+    /* 4. Historia y datos históricos */
     .historia {
         display: block !important;
         width: 100% !important;
         padding: 20px !important;
         box-sizing: border-box !important;
-    }
-
-    .titulo-historia, #historia h2 {
-        margin-top: 50px !important;
-        margin-bottom: 30px !important;
     }
 
     .texto-historia p {
@@ -913,67 +986,31 @@ button.control-cantidad {
         line-height: 1.6;
     }
 
-    /* 2. El contenedor padre debe ser columna para apilar bloques */
     .contenedor-historia {
         display: flex !important;
         flex-direction: column !important;
         width: 100% !important;
     }
 
-    /* 3. Aquí forzamos las estadísticas a estar una al lado de la otra */
-   .datos-historicos {
-        display: flex !important;
-        flex-direction: row !important; /* <--- Esto debe ponerlos uno al lado del otro */
-        justify-content: space-between !important;
-        width: 100% !important;
-        gap: 5px !important; /* Espacio pequeño entre las cajas */
-        flex-wrap: wrap;
-    }
-    
-
-    /* 4. Cada cajita de dato ocupa casi la mitad */
-    .caja-dato {
-        width: 48% !important;
-        text-align: center;
-        background-color: #1a1a1a;
-        padding: 10px !important;
-        border-radius: 5px;
-        box-sizing: border-box;
-        width: 48% !important; 
-       width: 48% !important; /* <--- Ajusta a 45% si aun se apilan */
-        display: block !important;
-        text-align: center;
-    }
-
-    /* 5. Asegurar que la imagen no se desborde */
-    .imagen-historia img {
-        width: 100% !important;
-        height: auto !important;
-    }
-} 
-.datos-historicos {
+    .datos-historicos {
         display: flex !important;
         flex-direction: row !important;
         width: 100% !important;
         gap: 10px !important;
-        /* Esto asegura que ambos ocupen lo mismo */
         align-items: stretch !important; 
     }
 
-    /* 2. Propiedades idénticas para ambas cajas */
     .caja-dato {
-        flex: 1 !important; /* IMPORTANTE: Esto hace que ambos ocupen el 50% exacto */
-        width: 100% !important; 
-        text-align: center;
+        flex: 1 !important; 
+        text-align: center !important;
         background-color: #1a1a1a;
-        padding: 20px 10px !important; /* Relleno igual para ambos */
+        padding: 20px 10px !important; 
         border-radius: 5px;
-        box-sizing: border-box !important; /* Asegura que el padding no los agrande de más */
+        box-sizing: border-box !important; 
     }
-   #partidos h2 {
-        margin-top: 60px !important;  /* Ajusta este valor para bajarlo más o menos */
-        margin-bottom: 20px !important;
-        display: block !important;
+
+    .imagen-historia img {
         width: 100% !important;
+        height: auto !important;
     }
-}/* <--- ESTA LLAVE CIERRA EL @media CORRECTAMENTE */
+}

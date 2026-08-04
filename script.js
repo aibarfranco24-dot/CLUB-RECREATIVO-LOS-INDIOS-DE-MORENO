@@ -11,13 +11,16 @@ function renderizarCarrito() {
     let total = 0;
 
     carrito.forEach((prod, index) => {
+        // Soporte compatible tanto para el formato nuevo como por si quedó alguno viejo
+        let nombreMostrado = prod.nombreBase ? `${prod.nombreBase} (Talle: ${prod.talle})` : prod.nombre;
+        
         total += (prod.precio * prod.cantidad);
         
         if (lista) {
             const li = document.createElement('li');
             li.innerHTML = `
                 <div class="item-carrito">
-                    <span class="nombre-producto">${prod.nombre} - $${(prod.precio * prod.cantidad).toFixed(2)}</span>
+                    <span class="nombre-producto">${nombreMostrado} - $${(prod.precio * prod.cantidad).toFixed(2)}</span>
                     
                     <div class="controles">
                         <button onclick="cambiarCantidad(${index}, -1)" class="btn-control">-</button>
@@ -62,25 +65,46 @@ function eliminarProducto(index) {
 }
 
 // 3. Función para agregar productos
-function agregarAlCarrito(nombre, precio, stockDisponible) {
-    const productoExistente = carrito.find(p => p.nombre === nombre);
-    const cantidadActual = productoExistente ? productoExistente.cantidad : 0;
+function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
+    const selectTalle = document.getElementById(`talle-${index}`);
+    const talleSeleccionado = selectTalle ? selectTalle.value : 'Único';
 
-    if (cantidadActual + 1 > stockDisponible) {
-        Swal.fire({ icon: 'error', title: 'Sin stock', text: 'No hay más unidades disponibles.', background: '#1a1a1a', color: '#ffffff' });
+    // 1. Calculamos cuántas unidades de este producto ya hay en el carrito (sumando todos los talles)
+    let totalUnidadesEnCarrito = carrito
+        .filter(p => p.nombreBase === nombre)
+        .reduce((sum, p) => sum + p.cantidad, 0);
+
+    // 2. Validamos contra el stock global del producto
+    if (totalUnidadesEnCarrito + 1 > stockTotalProducto) {
+        Swal.fire({ 
+            icon: 'error', 
+            title: 'Sin stock', 
+            text: `Solo hay ${stockTotalProducto} unidades disponibles en total para este producto.`, 
+            background: '#1a1a1a', 
+            color: '#ffffff' 
+        });
         return;
     }
+
+    // 3. Buscamos si ya existe exactamente este producto con este talle
+    let productoExistente = carrito.find(p => p.nombreBase === nombre && p.talle === talleSeleccionado);
 
     if (productoExistente) {
         productoExistente.cantidad += 1;
     } else {
-        carrito.push({ nombre: nombre, precio: parseFloat(precio), cantidad: 1, stock: stockDisponible });
+        carrito.push({
+            nombreBase: nombre,
+            talle: talleSeleccionado,
+            precio: parseFloat(precio),
+            cantidad: 1,
+            stock: stockTotalProducto
+        });
     }
     
     renderizarCarrito();
     
     Swal.fire({
-        toast: true, position: 'top-end', icon: 'success', title: `${nombre} agregado`,
+        toast: true, position: 'top-end', icon: 'success', title: `${nombre} (${talleSeleccionado}) agregado`,
         showConfirmButton: false, timer: 1500, background: '#1a1a1a', color: '#ffffff'
     });
 }
@@ -99,14 +123,23 @@ fetch('productos.json')
         if (!contenedor) return;
         
         contenedor.innerHTML = '';
-        prods.forEach(p => {
+        prods.forEach((p, index) => {
+            // Genera el selector de talles si el producto tiene talles definidos
+            let opcionesTalles = '';
+            if (p.talles && p.talles.length > 0) {
+                opcionesTalles = `<select id="talle-${index}" class="select-talle">` + 
+                    p.talles.map(t => `<option value="${t}">${t}</option>`).join('') + 
+                    `</select>`;
+            }
+
             contenedor.innerHTML += `
                 <div class="producto">
                     <img src="imagenes/${p.imagen}" alt="${p.nombre}" style="width: 150px; display: block; margin: 0 auto;"> 
                     <h3>${p.nombre}</h3>
                     <p>Disponibles: ${p.stock}</p> 
                     <p>$${p.precio}</p>
-                    <button onclick="agregarAlCarrito('${p.nombre}', ${p.precio}, ${p.stock})">Comprar</button>
+                    ${opcionesTalles}
+                    <button onclick="agregarAlCarritoConTalle('${p.nombre}', ${p.precio}, ${p.stock}, ${index})">Comprar</button>
                 </div>
             `;
         });
@@ -237,17 +270,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Restringir campos de texto para que solo admitan números
-    const idsNumericos = ['telefono-cliente', 'tarjeta-numero', 'tarjeta-fecha', 'tarjeta-cvv'];
-    
-    idsNumericos.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            });
-        }
-    });
+    // 1. Teléfono: solo números y máximo 15 dígitos
+    const telInput = document.getElementById('telefono-cliente');
+    if (telInput) {
+        telInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 15);
+        });
+    }
+
+    // 2. Número de tarjeta: solo números y máximo 16 dígitos
+    const tarjetaInput = document.getElementById('tarjeta-numero');
+    if (tarjetaInput) {
+        tarjetaInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 16);
+        });
+    }
+
+    // 3. Fecha MM/AA: formato automático con barra y máximo 5 caracteres
+    const fechaInput = document.getElementById('tarjeta-fecha');
+    if (fechaInput) {
+        fechaInput.addEventListener('input', (e) => {
+            let valor = e.target.value.replace(/[^0-9]/g, '');
+            if (valor.length > 2) {
+                valor = valor.slice(0, 2) + '/' + valor.slice(2, 5);
+            }
+            e.target.value = valor.slice(0, 5);
+        });
+    }
+
+    // 4. CVV: solo números y máximo 4 dígitos
+    const cvvInput = document.getElementById('tarjeta-cvv');
+    if (cvvInput) {
+        cvvInput.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4);
+        });
+    }
     
     renderizarCarrito();
 });

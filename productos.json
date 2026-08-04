@@ -4,35 +4,40 @@
     "nombre": "Juan Martin #4",
     "precio": 25000,
     "stock": 10,
-    "imagen": "remera-titular.png"
+    "imagen": "remera-titular.png",
+     "talles": ["S", "M", "L", "XL", "XXL"]
   },
    {
     "id": 2,
     "nombre": "Lucas Silva #7",
     "precio": 25000,
     "stock": 5,
-    "imagen": "Remera-Lucas-Silva.png"
+    "imagen": "Remera-Lucas-Silva.png",
+     "talles": ["S", "M", "L", "XL", "XXL"]
   },
    {
     "id": 3,
     "nombre": "Mateo Gonzalez #10",
     "precio": 25000,
     "stock": 5,
-    "imagen": "Remera-Mateo-Gonzalez.png"
+    "imagen": "Remera-Mateo-Gonzalez.png",
+     "talles": ["S", "M", "L", "XL", "XXL"]
   },
    {
     "id": 4,
     "nombre": "Santiago Rossi #15",
     "precio": 25000,
     "stock": 5,
-    "imagen": "Remera-Santiago-Rossi.png"
+    "imagen": "Remera-Santiago-Rossi.png",
+     "talles": ["S", "M", "L", "XL", "XXL"]
   },
    {
     "id": 5,
     "nombre": "Breaden-James #00",
     "precio": 25000,
     "stock": 5,
-    "imagen": "Remera-Breaden-James.png"
+    "imagen": "Remera-Breaden-James.png",
+     "talles": ["S", "M", "L", "XL", "XXL"]
   }
 
 ]

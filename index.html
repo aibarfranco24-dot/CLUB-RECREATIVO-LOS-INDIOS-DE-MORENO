@@ -241,8 +241,8 @@
         <h3>Datos de entrega y pago</h3>
         
         <input type="text" id="nombre-cliente" placeholder="Nombre completo">
-        <input type="text" id="telefono-cliente" inputmode="numeric" pattern="[0-9]*" placeholder="Teléfono de contacto">
-        
+        <input type="phone" id="telefono-cliente" placeholder="Numero de telefono" maxlength="10" >
+    
         <select id="metodo-entrega" onchange="toggleDireccion()">
             <option value="retiro">Retiro en el club</option>
             <option value="envio">Envío a domicilio</option>
@@ -252,11 +252,13 @@
             <input type="text" id="direccion-cliente" placeholder="Dirección de envío">
         </div>
         
-        <input type="text" id="tarjeta-numero" inputmode="numeric" pattern="[0-9]*" placeholder="Número de tarjeta">
+        <input type="card" id="tarjeta-numero"  placeholder="Número de tarjeta" maxlength="16" >
+    
+
         
         <div style="display:flex; gap: 10px;">
-            <input type="text" id="tarjeta-fecha" inputmode="numeric" pattern="[0-9]*" placeholder="MM/AA">
-            <input type="text" id="tarjeta-cvv" inputmode="numeric" pattern="[0-9]*" placeholder="CVV">
+            <input type="card" id="tarjeta-fecha"  placeholder="MM/AA" maxlength="5">
+            <input type="card" id="tarjeta-cvv"  placeholder="CVV" maxlength="4">
         </div>
 
         <div class="botones-formulario">
