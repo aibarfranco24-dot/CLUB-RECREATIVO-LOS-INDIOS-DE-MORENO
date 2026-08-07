@@ -971,6 +971,7 @@ button.control-cantidad {
         margin-left: auto !important;
         margin-right: auto !important;
         display: block !important;
+        margin-top: 60px !important;
     }
 
     .hero, .equipo, #equipo, .partidos, #partidos, .contenedor-noticias, .tarjeta-partido {
