@@ -43,42 +43,49 @@ function renderizarCarrito() {
 }
 
 // Función para ajustar cantidades
-function cambiarCantidad(index, delta) {
-    const prod = carrito[index];
+function cambiarCantidad(index, cambio) {
+    const producto = carrito[index];
     
-    if (delta === 1 && prod.cantidad >= prod.stock) {
-        Swal.fire({ icon: 'warning', title: 'Agotado', text: 'Has alcanzado el límite de stock.', background: '#1a1a1a', color: '#ffffff' });
-        return;
-    }
+    if (cambio > 0) {
+        // Calculamos el total actual en el carrito excluyendo este ítem para ver cuánto margen queda
+        let unidadesOtras = carrito
+            .filter((p, i) => p.nombreBase === producto.nombreBase && i !== index)
+            .reduce((sum, p) => sum + p.cantidad, 0);
 
-    prod.cantidad += delta;
-    if (prod.cantidad <= 0) {
-        eliminarProducto(index);
-    } else {
-        renderizarCarrito();
+        if (unidadesOtras + producto.cantidad + 1 > producto.stock) {
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Límite alcanzado', 
+                text: `No puedes superar el stock total de ${producto.stock} unidades para este producto.`, 
+                background: '#1a1a1a', 
+                color: '#ffffff' 
+            });
+            return;
+        }
+        producto.cantidad += 1;
+    } else if (cambio < 0) {
+        producto.cantidad -= 1;
+        if (producto.cantidad <= 0) {
+            carrito.splice(index, 1);
+        }
     }
-}
-
-function eliminarProducto(index) {
-    carrito.splice(index, 1); 
+    
     renderizarCarrito();
 }
 
-// 3. Función para agregar productos
+// 1. Agregar al carrito con validación estricta de stock global (todos los talles combinados)
 function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
     const selectTalle = document.getElementById(`talle-${index}`);
     const talleSeleccionado = selectTalle ? selectTalle.value : 'Único';
 
-    // 1. Calculamos cuántas unidades de este producto ya hay en el carrito (sumando todos los talles)
     let totalUnidadesEnCarrito = carrito
         .filter(p => p.nombreBase === nombre)
         .reduce((sum, p) => sum + p.cantidad, 0);
 
-    // 2. Validamos contra el stock global del producto
-    if (totalUnidadesEnCarrito + 1 > stockTotalProducto) {
+    if (totalUnidadesEnCarrito >= stockTotalProducto) {
         Swal.fire({ 
             icon: 'error', 
-            title: 'Sin stock', 
+            title: 'Stock agotado', 
             text: `Solo hay ${stockTotalProducto} unidades disponibles en total para este producto.`, 
             background: '#1a1a1a', 
             color: '#ffffff' 
@@ -86,7 +93,6 @@ function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
         return;
     }
 
-    // 3. Buscamos si ya existe exactamente este producto con este talle
     let productoExistente = carrito.find(p => p.nombreBase === nombre && p.talle === talleSeleccionado);
 
     if (productoExistente) {
@@ -109,9 +115,46 @@ function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
     });
 }
 
-// 4. Función para vaciar
+// 2. Controlar la cantidad mediante los botones de más (+) y menos (-)
+function cambiarCantidad(index, cambio) {
+    const producto = carrito[index];
+    
+    if (cambio > 0) {
+        let unidadesOtras = carrito
+            .filter((p, i) => p.nombreBase === producto.nombreBase && i !== index)
+            .reduce((sum, p) => sum + p.cantidad, 0);
+
+        if (unidadesOtras + producto.cantidad + 1 > producto.stock) {
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Límite alcanzado', 
+                text: `No puedes superar el stock total de ${producto.stock} unidades para este producto.`, 
+                background: '#1a1a1a', 
+                color: '#ffffff' 
+            });
+            return;
+        }
+        producto.cantidad += 1;
+    } else if (cambio < 0) {
+        producto.cantidad -= 1;
+        if (producto.cantidad <= 0) {
+            carrito.splice(index, 1);
+        }
+    }
+    
+    renderizarCarrito();
+}
+
+// 3. Eliminar un producto específico desde el tacho de basura
+function eliminarProducto(index) {
+    carrito.splice(index, 1);
+    renderizarCarrito();
+}
+
+// 4. Vaciar todo el carrito por completo y limpiar la memoria
 function vaciarCarrito() {
     carrito = [];
+    localStorage.removeItem('carrito');
     renderizarCarrito();
 }
 
@@ -307,4 +350,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     renderizarCarrito();
+
+// boton volver arriba suave
+window.addEventListener('scroll', function() {
+    const btnArriba = document.getElementById('btn-volver-arriba');
+    
+    // Calculamos si el usuario llegó casi al final de la página (a unos 100px del fondo)
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - 150) {
+        btnArriba.classList.add('mostrar');
+    } else {
+        btnArriba.classList.remove('mostrar');
+    }
+});
+
+document.getElementById('btn-volver-arriba').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 });

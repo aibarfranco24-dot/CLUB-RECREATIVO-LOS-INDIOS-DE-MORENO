@@ -843,10 +843,45 @@ button.control-cantidad {
     padding: 8px;
     text-align: center;
 }
+.menu-hamburguesa {
+    display: none !important;
+}
+.btn-volver-arriba {
+    position: fixed;
+    bottom: 20px;
+    left: 20px; /* Ubicado en la esquina inferior izquierda */
+    z-index: 999;
+    background-color: white; /* Fondo oscuro elegante */
+    color: black;
+    border: 2px solid #ffffff; /* Borde blanco para que destaque */
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    opacity: 0; /* Oculto por defecto */
+    visibility: hidden; /* Oculto para que no interfiera con clics */
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
 
+/* Clase que activaremos con JS cuando llegue al final */
+.btn-volver-arriba.mostrar {
+    opacity: 1;
+    visibility: visible;
+}
 
+.btn-volver-arriba:hover {
+    background-color: #ffffff;
+    color: #000000;
+    transform: scale(1.1);
+}
 
-
+.btn-volver-arriba i {
+    font-size: 20px;
+}
 
 
 
@@ -916,6 +951,7 @@ button.control-cantidad {
         text-align: left !important;
         padding-left: 20px;
         box-sizing: border-box;
+        position: fixed;
     }
 
     .menu-enlaces.activo {
