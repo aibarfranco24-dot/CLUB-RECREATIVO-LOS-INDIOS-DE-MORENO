@@ -1,3 +1,19 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBXOloQzV1lbYK90llREvP6QfINV9ifRM4",
+    authDomain: "club-los-indios-308cf.firebaseapp.com",
+    projectId: "club-los-indios-308cf",
+    storageBucket: "club-los-indios-308cf.firebasestorage.app",
+    messagingSenderId: "364857138073",
+    appId: "1:364857138073:web:f45eaa3c18638abe7d1108",
+    measurementId: "G-Y30GF8TFFD"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 // 1. Estado inicial
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
@@ -11,7 +27,6 @@ function renderizarCarrito() {
     let total = 0;
 
     carrito.forEach((prod, index) => {
-        // Soporte compatible tanto para el formato nuevo como por si quedó alguno viejo
         let nombreMostrado = prod.nombreBase ? `${prod.nombreBase} (Talle: ${prod.talle})` : prod.nombre;
         
         total += (prod.precio * prod.cantidad);
@@ -42,12 +57,11 @@ function renderizarCarrito() {
     localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
-// Función para ajustar cantidades
-function cambiarCantidad(index, cambio) {
+// 3. Función para ajustar cantidades
+window.cambiarCantidad = function(index, cambio) {
     const producto = carrito[index];
     
     if (cambio > 0) {
-        // Calculamos el total actual en el carrito excluyendo este ítem para ver cuánto margen queda
         let unidadesOtras = carrito
             .filter((p, i) => p.nombreBase === producto.nombreBase && i !== index)
             .reduce((sum, p) => sum + p.cantidad, 0);
@@ -73,9 +87,9 @@ function cambiarCantidad(index, cambio) {
     renderizarCarrito();
 }
 
-// 1. Agregar al carrito con validación estricta de stock global (todos los talles combinados)
-function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
-    const selectTalle = document.getElementById(`talle-${index}`);
+// 4. Agregar al carrito con validación de stock
+window.agregarAlCarritoConTalle = function(nombre, precio, stockTotalProducto, docId) {
+    const selectTalle = document.getElementById(`talle-${docId}`);
     const talleSeleccionado = selectTalle ? selectTalle.value : 'Único';
 
     let totalUnidadesEnCarrito = carrito
@@ -99,6 +113,7 @@ function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
         productoExistente.cantidad += 1;
     } else {
         carrito.push({
+            id: docId, // Guardamos el ID de Firebase para luego descontar stock correctamente
             nombreBase: nombre,
             talle: talleSeleccionado,
             precio: parseFloat(precio),
@@ -115,82 +130,68 @@ function agregarAlCarritoConTalle(nombre, precio, stockTotalProducto, index) {
     });
 }
 
-// 2. Controlar la cantidad mediante los botones de más (+) y menos (-)
-function cambiarCantidad(index, cambio) {
-    const producto = carrito[index];
-    
-    if (cambio > 0) {
-        let unidadesOtras = carrito
-            .filter((p, i) => p.nombreBase === producto.nombreBase && i !== index)
-            .reduce((sum, p) => sum + p.cantidad, 0);
-
-        if (unidadesOtras + producto.cantidad + 1 > producto.stock) {
-            Swal.fire({ 
-                icon: 'error', 
-                title: 'Límite alcanzado', 
-                text: `No puedes superar el stock total de ${producto.stock} unidades para este producto.`, 
-                background: '#1a1a1a', 
-                color: '#ffffff' 
-            });
-            return;
-        }
-        producto.cantidad += 1;
-    } else if (cambio < 0) {
-        producto.cantidad -= 1;
-        if (producto.cantidad <= 0) {
-            carrito.splice(index, 1);
-        }
-    }
-    
-    renderizarCarrito();
-}
-
-// 3. Eliminar un producto específico desde el tacho de basura
-function eliminarProducto(index) {
+// 5. Eliminar un producto específico
+window.eliminarProducto = function(index) {
     carrito.splice(index, 1);
     renderizarCarrito();
 }
 
-// 4. Vaciar todo el carrito por completo y limpiar la memoria
-function vaciarCarrito() {
+// 6. Vaciar todo el carrito
+window.vaciarCarrito = function() {
     carrito = [];
     localStorage.removeItem('carrito');
     renderizarCarrito();
 }
 
-// 5. Carga de productos desde el archivo JSON local
-fetch('productos.json')
-    .then(res => res.json())
-    .then(prods => {
+// 7. Carga de productos desde Firebase Firestore
+async function cargarProductosDesdeFirebase() {
+    try {
         const contenedor = document.getElementById('lista-productos');
         if (!contenedor) return;
         
+        contenedor.innerHTML = '<p style="color: white; text-align: center;">Cargando productos...</p>';
+        
+        const querySnapshot = await getDocs(collection(db, "productos"));
         contenedor.innerHTML = '';
-        prods.forEach((p, index) => {
-            // Genera el selector de talles si el producto tiene talles definidos
-            let opcionesTalles = '';
-            if (p.talles && p.talles.length > 0) {
-                opcionesTalles = `<select id="talle-${index}" class="select-talle">` + 
-                    p.talles.map(t => `<option value="${t}">${t}</option>`).join('') + 
-                    `</select>`;
-            }
+
+        if (querySnapshot.empty) {
+            contenedor.innerHTML = '<p style="color: white; text-align: center;">No hay productos cargados todavía.</p>';
+            return;
+        }
+
+        querySnapshot.forEach((docSnap) => {
+            const p = docSnap.data();
+            const docId = docSnap.id; 
+            
+            const tallesDisponibles = p.talles || p.talle || ['S', 'M', 'L', 'XL'];
+            let opcionesTalles = `<select id="talle-${docId}" class="select-talle">` + 
+                tallesDisponibles.map(t => `<option value="${t}">${t}</option>`).join('') + 
+                `</select>`;
+
+            const stock = Math.max(0, p.stock !== undefined ? p.stock : 0);
+            const precio = p.precio || 0;
+        
 
             contenedor.innerHTML += `
                 <div class="producto">
-                    <img src="imagenes/${p.imagen}" alt="${p.nombre}" style="width: 150px; display: block; margin: 0 auto;"> 
+                    <img src="${p.imagen}" alt="${p.nombre}" style="width: 150px; display: block; margin: 0 auto;" onerror="this.src='imagenes/default.jpg'"> 
                     <h3>${p.nombre}</h3>
-                    <p>Disponibles: ${p.stock}</p> 
-                    <p>$${p.precio}</p>
+                    <p>Disponibles: ${stock}</p> 
+                    <p>$${precio}</p>
                     ${opcionesTalles}
-                    <button onclick="agregarAlCarritoConTalle('${p.nombre}', ${p.precio}, ${p.stock}, ${index})">Comprar</button>
+                    <button onclick="agregarAlCarritoConTalle('${p.nombre}', ${precio}, ${stock}, '${docId}')">Comprar</button>
                 </div>
             `;
         });
-    })
-    .catch(err => console.error('Error al cargar productos:', err));
+    } catch (err) {
+        console.error('Error al cargar productos de Firebase:', err);
+    }
+}
 
-// 6. Finalizar compra y manejo del formulario
-function finalizarCompra() {
+cargarProductosDesdeFirebase();
+
+// 8. Finalizar compra y manejo del formulario
+window.finalizarCompra = function() {
     if (carrito.length === 0) {
         Swal.fire({ icon: 'warning', title: 'Oops...', text: 'Tu carrito está vacío.', background: '#1a1a1a', color: '#ffffff' });
         return;
@@ -199,7 +200,35 @@ function finalizarCompra() {
     document.getElementById('btn-finalizar').style.display = 'none'; 
 }
 
-function toggleDireccion() {
+// Función auxiliar para descontar stock en Firebase
+async function descontarStock(carritoItems) {
+    // 1. Agrupamos las cantidades totales a descontar por ID de producto
+    const resumenStock = {};
+    
+    for (const item of carritoItems) {
+        if (!item.id) continue;
+        if (!resumenStock[item.id]) {
+            resumenStock[item.id] = { stockActual: item.stock, totalComprado: 0 };
+        }
+        resumenStock[item.id].totalComprado += item.cantidad;
+    }
+
+    // 2. Aplicamos el descuento real sumando todas las cantidades compradas por talle
+    for (const [idProducto, datos] of Object.entries(resumenStock)) {
+        const productoRef = doc(db, "productos", idProducto);
+        try {
+            // Obtenemos el stock base y le restamos la suma total de lo que compró
+            const nuevoStock = Math.max(0, datos.stockActual - datos.totalComprado);
+            await updateDoc(productoRef, {
+                stock: nuevoStock
+            });
+        } catch (error) {
+            console.error("Error al actualizar el stock del producto:", error);
+        }
+    }
+}
+
+window.toggleDireccion = function() {
     const metodo = document.getElementById('metodo-entrega').value;
     const contenedorDireccion = document.getElementById('contenedor-direccion');
     
@@ -214,12 +243,12 @@ function toggleDireccion() {
     }
 }
 
-function cerrarFormulario() {
+window.cerrarFormulario = function() {
     document.getElementById('formulario-pedido').style.display = 'none';
     document.getElementById('btn-finalizar').style.display = 'inline-block';
 }
 
-function confirmarPedido() {
+window.confirmarPedido = async function() {
     const nombre = document.getElementById('nombre-cliente').value.trim();
     const telefono = document.getElementById('telefono-cliente').value.trim();
     const metodo = document.getElementById('metodo-entrega').value;
@@ -230,6 +259,7 @@ function confirmarPedido() {
     const expiracion = document.getElementById('tarjeta-fecha') ? document.getElementById('tarjeta-fecha').value.trim() : '';
     const cvv = document.getElementById('tarjeta-cvv') ? document.getElementById('tarjeta-cvv').value.trim() : '';
 
+    // Tus alertas originales intactas
     if (!nombre || !telefono || !numeroTarjeta || !expiracion || !cvv) {
         Swal.fire({ 
             icon: 'error', 
@@ -252,56 +282,70 @@ function confirmarPedido() {
         return;
     }
 
-    let detalleProductos = carrito.map(p => `${p.cantidad}x ${p.nombre} ($${p.precio * p.cantidad})`).join(', ');
+    let detalleProductos = carrito.map(p => ({
+        nombre: p.nombreBase,
+        talle: p.talle,
+        cantidad: p.cantidad,
+        precioUnitario: p.precio,
+        subtotal: p.precio * p.cantidad
+    }));
+    
     let totalCompra = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
 
-    const datosFormulario = {
-        nombre: nombre,
+    const datosPedido = {
+        cliente: nombre,
         telefono: telefono,
         metodoEntrega: metodo,
         direccion: metodo === 'envio' ? direccion : 'Retira en el club',
         productos: detalleProductos,
-        total: `$${totalCompra}`
+        total: totalCompra,
+        fecha: new Date().toISOString(),
+        estado: 'Pendiente'
     };
 
-    fetch('https://formspree.io/f/xlgylaqy', {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(datosFormulario)
-    })
-    .then(response => {
-        if (response.ok) {
-            Swal.fire({
-                title: '¡Compra confirmada!',
-                text: `Gracias ${nombre}. Tu pedido fue enviado con éxito.`,
-                icon: 'success', background: '#1a1a1a', color: '#ffffff'
-            });
-            vaciarCarrito();
-            document.getElementById('formulario-pedido').style.display = 'none';
-            document.getElementById('btn-finalizar').style.display = 'inline-block';
-        } else {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'Hubo un problema al enviar el pedido.', background: '#1a1a1a', color: '#ffffff' });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        Swal.fire({ icon: 'error', title: 'Error de conexión', text: 'No se pudo conectar con el servidor.', background: '#1a1a1a', color: '#ffffff' });
-    });
-}   
+    try {
+        await addDoc(collection(db, "pedidos"), datosPedido);
 
-// 7. Función para el menú hamburguesa y cierre automático
-function toggleMenu() {
-    const menu = document.getElementById('menu-desplegable');
-    if (menu) {
-        menu.classList.toggle('activo');
+        // Descuenta el stock de todos los talles de forma agrupada en Firebase
+        await descontarStock(carrito);
+
+        let detalleTexto = carrito.map(p => `${p.cantidad}x ${p.nombreBase} (${p.talle}) - $${p.precio * p.cantidad}`).join(', ');
+        await fetch('https://formspree.io/f/xlgylaqy', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nombre: nombre,
+                telefono: telefono,
+                metodoEntrega: metodo,
+                direccion: datosPedido.direccion,
+                productos: detalleTexto,
+                total: `$${totalCompra}`
+            })
+        });
+
+        // Alerta de éxito con la recarga automática al cerrar
+        Swal.fire({
+            title: '¡Compra confirmada!',
+            text: `Gracias ${nombre}. Tu pedido fue registrado con éxito.`,
+            icon: 'success', 
+            background: '#1a1a1a', 
+            color: '#ffffff',
+            didClose: () => {
+                location.reload();
+            }
+        });
+        
+        vaciarCarrito();
+
+    } catch (error) {
+        console.error('Error al guardar el pedido:', error);
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar el pedido en la base de datos.', background: '#1a1a1a', color: '#ffffff' });
     }
 }
 
+
+// 9. Eventos generales al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
-    // Cerrar menú al hacer clic en un enlace
     const enlacesMenu = document.querySelectorAll('#menu-desplegable a');
     const menu = document.getElementById('menu-desplegable');
 
@@ -313,7 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 1. Teléfono: solo números y máximo 15 dígitos
     const telInput = document.getElementById('telefono-cliente');
     if (telInput) {
         telInput.addEventListener('input', (e) => {
@@ -321,7 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. Número de tarjeta: solo números y máximo 16 dígitos
     const tarjetaInput = document.getElementById('tarjeta-numero');
     if (tarjetaInput) {
         tarjetaInput.addEventListener('input', (e) => {
@@ -329,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Fecha MM/AA: formato automático con barra y máximo 5 caracteres
     const fechaInput = document.getElementById('tarjeta-fecha');
     if (fechaInput) {
         fechaInput.addEventListener('input', (e) => {
@@ -341,7 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 4. CVV: solo números y máximo 4 dígitos
     const cvvInput = document.getElementById('tarjeta-cvv');
     if (cvvInput) {
         cvvInput.addEventListener('input', (e) => {
@@ -351,28 +391,27 @@ document.addEventListener('DOMContentLoaded', () => {
     
     renderizarCarrito();
 
-// boton volver arriba suave
-window.addEventListener('scroll', function() {
-    const btnArriba = document.getElementById('btn-volver-arriba');
-    
-    // Calculamos si el usuario llegó casi al final de la página (a unos 100px del fondo)
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight;
+    // Botón volver arriba
+    window.addEventListener('scroll', function() {
+        const btnArriba = document.getElementById('btn-volver-arriba');
+        if (!btnArriba) return;
+        
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
 
-    if (scrollTop + clientHeight >= scrollHeight - 150) {
-        btnArriba.classList.add('mostrar');
-    } else {
-        btnArriba.classList.remove('mostrar');
-    }
-});
-
-document.getElementById('btn-volver-arriba').addEventListener('click', function(e) {
-    e.preventDefault();
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+        if (scrollTop + clientHeight >= scrollHeight - 150) {
+            btnArriba.classList.add('mostrar');
+        } else {
+            btnArriba.classList.remove('mostrar');
+        }
     });
-});
 
+    const btnVolver = document.getElementById('btn-volver-arriba');
+    if (btnVolver) {
+        btnVolver.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 });
