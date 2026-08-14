@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBXOloQzV1lbYK90llREvP6QfINV9ifRM4",
@@ -304,7 +304,9 @@ window.confirmarPedido = async function() {
     };
 
     try {
-        await addDoc(collection(db, "pedidos"), datosPedido);
+       const idPersonalizado = `${nombre}_${Date.now()}`;
+        await setDoc(doc(db, "pedidos", idPersonalizado), datosPedido);
+     
 
         // Descuenta el stock de todos los talles de forma agrupada en Firebase
         await descontarStock(carrito);
@@ -415,3 +417,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+window.toggleMenu = function() {
+    const menu = document.getElementById('menu-desplegable');
+    if (menu) {
+        menu.classList.toggle('activo');
+    }
+}
