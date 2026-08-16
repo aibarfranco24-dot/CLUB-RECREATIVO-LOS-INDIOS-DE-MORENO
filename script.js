@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBXOloQzV1lbYK90llREvP6QfINV9ifRM4",
@@ -57,20 +57,30 @@ function renderizarCarrito() {
     localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 
-// 3. Función para ajustar cantidades
+// Función auxiliar para actualizar el stock visual cuando cambia el talle
+window.actualizarStockVisual = function(selectElement, idProducto) {
+    const opcionSeleccionada = selectElement.options[selectElement.selectedIndex];
+    const stockDisponibilidad = opcionSeleccionada.getAttribute('data-stock');
+    const spanStock = document.getElementById(`stock-${idProducto}`);
+    if (spanStock) {
+        spanStock.textContent = stockDisponibilidad;
+    }
+}
+
+// 3. Función para ajustar cantidades con control de stock por talle
 window.cambiarCantidad = function(index, cambio) {
     const producto = carrito[index];
     
     if (cambio > 0) {
         let unidadesOtras = carrito
-            .filter((p, i) => p.nombreBase === producto.nombreBase && i !== index)
+            .filter((p, i) => p.nombreBase === producto.nombreBase && p.talle === producto.talle && i !== index)
             .reduce((sum, p) => sum + p.cantidad, 0);
 
-        if (unidadesOtras + producto.cantidad + 1 > producto.stock) {
+        if (unidadesOtras + producto.cantidad + 1 > producto.stockMaxTalle) {
             Swal.fire({ 
                 icon: 'error', 
                 title: 'Límite alcanzado', 
-                text: `No puedes superar el stock total de ${producto.stock} unidades para este producto.`, 
+                text: `No puedes superar el stock disponible de ${producto.stockMaxTalle} unidades para este talle.`, 
                 background: '#1a1a1a', 
                 color: '#ffffff' 
             });
@@ -87,20 +97,24 @@ window.cambiarCantidad = function(index, cambio) {
     renderizarCarrito();
 }
 
-// 4. Agregar al carrito con validación de stock
-window.agregarAlCarritoConTalle = function(nombre, precio, stockTotalProducto, docId) {
+// 4. Agregar al carrito con validación de stock por talle
+window.agregarAlCarritoConTalle = function(nombre, precio, docId) {
     const selectTalle = document.getElementById(`talle-${docId}`);
-    const talleSeleccionado = selectTalle ? selectTalle.value : 'Único';
+    if (!selectTalle) return;
 
-    let totalUnidadesEnCarrito = carrito
-        .filter(p => p.nombreBase === nombre)
+    const talleSeleccionado = selectTalle.value;
+    const opcionSeleccionada = selectTalle.options[selectTalle.selectedIndex];
+    const stockMaxTalle = parseInt(opcionSeleccionada.getAttribute('data-stock')) || 0;
+
+    let unidadesMismoTalle = carrito
+        .filter(p => p.nombreBase === nombre && p.talle === talleSeleccionado)
         .reduce((sum, p) => sum + p.cantidad, 0);
 
-    if (totalUnidadesEnCarrito >= stockTotalProducto) {
+    if (unidadesMismoTalle >= stockMaxTalle) {
         Swal.fire({ 
             icon: 'error', 
             title: 'Stock agotado', 
-            text: `Solo hay ${stockTotalProducto} unidades disponibles en total para este producto.`, 
+            text: `Solo hay ${stockMaxTalle} unidades disponibles para el talle ${talleSeleccionado}.`, 
             background: '#1a1a1a', 
             color: '#ffffff' 
         });
@@ -113,12 +127,12 @@ window.agregarAlCarritoConTalle = function(nombre, precio, stockTotalProducto, d
         productoExistente.cantidad += 1;
     } else {
         carrito.push({
-            id: docId, // Guardamos el ID de Firebase para luego descontar stock correctamente
+            id: docId,
             nombreBase: nombre,
             talle: talleSeleccionado,
             precio: parseFloat(precio),
             cantidad: 1,
-            stock: stockTotalProducto
+            stockMaxTalle: stockMaxTalle
         });
     }
     
@@ -143,7 +157,7 @@ window.vaciarCarrito = function() {
     renderizarCarrito();
 }
 
-// 7. Carga de productos desde Firebase Firestore
+// 7. Carga de productos desde Firebase Firestore (Manejo de Mapas de Talles ordenados)
 async function cargarProductosDesdeFirebase() {
     try {
         const contenedor = document.getElementById('lista-productos');
@@ -159,27 +173,52 @@ async function cargarProductosDesdeFirebase() {
             return;
         }
 
+        const ordenTalles = ['S', 'M', 'L', 'XL', 'XXL'];
+
         querySnapshot.forEach((docSnap) => {
             const p = docSnap.data();
             const docId = docSnap.id; 
             
-            const tallesDisponibles = p.talles || p.talle || ['S', 'M', 'L', 'XL'];
-            let opcionesTalles = `<select id="talle-${docId}" class="select-talle">` + 
-                tallesDisponibles.map(t => `<option value="${t}">${t}</option>`).join('') + 
-                `</select>`;
+            let stockPorTalle = p.talle;
+            let opcionesTalles = '';
+            let stockInicial = 0;
 
-            const stock = Math.max(0, p.stock !== undefined ? p.stock : 0);
+            if (stockPorTalle && typeof stockPorTalle === 'object' && !Array.isArray(stockPorTalle)) {
+                // Ordena las claves basándose en tu lista personalizada (S, M, L, XL, XXL)
+                const tallesOrdenados = Object.keys(stockPorTalle).sort((a, b) => {
+                    return ordenTalles.indexOf(a) - ordenTalles.indexOf(b);
+                });
+
+                let primerTalle = true;
+                tallesOrdenados.forEach(talleNombre => {
+                    const stockDispo = stockPorTalle[talleNombre];
+                    opcionesTalles += `<option value="${talleNombre}" data-stock="${stockDispo}">${talleNombre}</option>`;
+                    if (primerTalle) {
+                        stockInicial = stockDispo;
+                        primerTalle = false;
+                    }
+                });
+            } else {
+                // Fallback por si algún producto viejo usa array o stock general
+                const tallesArray = Array.isArray(p.talle) ? p.talle : ['Único'];
+                const stockGeneral = p.stock || 0;
+                tallesArray.forEach((t, i) => {
+                    opcionesTalles += `<option value="${t}" data-stock="${stockGeneral}">${t}</option>`;
+                    if (i === 0) stockInicial = stockGeneral;
+                });
+            }
+
+            let selectTallesHTML = `<select id="talle-${docId}" class="select-talle" onchange="actualizarStockVisual(this, '${docId}')">${opcionesTalles}</select>`;
             const precio = p.precio || 0;
-        
 
             contenedor.innerHTML += `
                 <div class="producto">
                     <img src="${p.imagen}" alt="${p.nombre}" style="width: 150px; display: block; margin: 0 auto;" onerror="this.src='imagenes/default.jpg'"> 
                     <h3>${p.nombre}</h3>
-                    <p>Disponibles: ${stock}</p> 
+                    <p>Stock disponible: <span id="stock-${docId}">${stockInicial}</span></p> 
                     <p>$${precio}</p>
-                    ${opcionesTalles}
-                    <button onclick="agregarAlCarritoConTalle('${p.nombre}', ${precio}, ${stock}, '${docId}')">Comprar</button>
+                    ${selectTallesHTML}
+                    <button onclick="agregarAlCarritoConTalle('${p.nombre}', ${precio}, '${docId}')">Comprar</button>
                 </div>
             `;
         });
@@ -200,30 +239,37 @@ window.finalizarCompra = function() {
     document.getElementById('btn-finalizar').style.display = 'none'; 
 }
 
-// Función auxiliar para descontar stock en Firebase
+// Función auxiliar para descontar stock de forma independiente por cada talle en Firebase
 async function descontarStock(carritoItems) {
-    // 1. Agrupamos las cantidades totales a descontar por ID de producto
-    const resumenStock = {};
-    
     for (const item of carritoItems) {
-        if (!item.id) continue;
-        if (!resumenStock[item.id]) {
-            resumenStock[item.id] = { stockActual: item.stock, totalComprado: 0 };
-        }
-        resumenStock[item.id].totalComprado += item.cantidad;
-    }
-
-    // 2. Aplicamos el descuento real sumando todas las cantidades compradas por talle
-    for (const [idProducto, datos] of Object.entries(resumenStock)) {
-        const productoRef = doc(db, "productos", idProducto);
+        if (!item.id || !item.talle) continue;
+        
+        const productoRef = doc(db, "productos", item.id);
         try {
-            // Obtenemos el stock base y le restamos la suma total de lo que compró
-            const nuevoStock = Math.max(0, datos.stockActual - datos.totalComprado);
-            await updateDoc(productoRef, {
-                stock: nuevoStock
-            });
+            const productoSnap = await getDoc(productoRef);
+            if (productoSnap.exists()) {
+                const data = productoSnap.data();
+                let stockActualTalles = data.talle;
+
+                // Si el talle es un mapa en Firebase
+                if (stockActualTalles && typeof stockActualTalles === 'object' && !Array.isArray(stockActualTalles)) {
+                    const stockActualDelTalle = stockActualTalles[item.talle] || 0;
+                    const nuevoStockTalle = Math.max(0, stockActualDelTalle - item.cantidad);
+                    stockActualTalles[item.talle] = nuevoStockTalle;
+
+                    await updateDoc(productoRef, {
+                        talle: stockActualTalles
+                    });
+                } else {
+                    // Fallback para stock general si aplica
+                    const stockGeneralActual = data.stock || 0;
+                    await updateDoc(productoRef, {
+                        stock: Math.max(0, stockGeneralActual - item.cantidad)
+                    });
+                }
+            }
         } catch (error) {
-            console.error("Error al actualizar el stock del producto:", error);
+            console.error("Error al actualizar el stock por talle:", error);
         }
     }
 }
@@ -259,7 +305,7 @@ window.confirmarPedido = async function() {
     const expiracion = document.getElementById('tarjeta-fecha') ? document.getElementById('tarjeta-fecha').value.trim() : '';
     const cvv = document.getElementById('tarjeta-cvv') ? document.getElementById('tarjeta-cvv').value.trim() : '';
 
-    // Tus alertas originales intactas
+    // Alertas de validación intactas
     if (!nombre || !telefono || !numeroTarjeta || !expiracion || !cvv) {
         Swal.fire({ 
             icon: 'error', 
@@ -304,11 +350,10 @@ window.confirmarPedido = async function() {
     };
 
     try {
-       const idPersonalizado = `${nombre}_${Date.now()}`;
+        const idPersonalizado = `${nombre}_${Date.now()}`;
         await setDoc(doc(db, "pedidos", idPersonalizado), datosPedido);
-     
 
-        // Descuenta el stock de todos los talles de forma agrupada en Firebase
+        // Descuenta el stock de forma independiente por talle en Firebase
         await descontarStock(carrito);
 
         let detalleTexto = carrito.map(p => `${p.cantidad}x ${p.nombreBase} (${p.talle}) - $${p.precio * p.cantidad}`).join(', ');
@@ -325,7 +370,6 @@ window.confirmarPedido = async function() {
             })
         });
 
-        // Alerta de éxito con la recarga automática al cerrar
         Swal.fire({
             title: '¡Compra confirmada!',
             text: `Gracias ${nombre}. Tu pedido fue registrado con éxito.`,
@@ -344,7 +388,6 @@ window.confirmarPedido = async function() {
         Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar el pedido en la base de datos.', background: '#1a1a1a', color: '#ffffff' });
     }
 }
-
 
 // 9. Eventos generales al cargar el DOM
 document.addEventListener('DOMContentLoaded', () => {
@@ -393,7 +436,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     renderizarCarrito();
 
-    // Botón volver arriba
     window.addEventListener('scroll', function() {
         const btnArriba = document.getElementById('btn-volver-arriba');
         if (!btnArriba) return;
@@ -417,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 window.toggleMenu = function() {
     const menu = document.getElementById('menu-desplegable');
     if (menu) {
