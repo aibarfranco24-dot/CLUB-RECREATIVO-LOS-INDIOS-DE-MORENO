@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Tienda</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- SweetAlert2 para alertas -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body style="background-color: #121212; color: white; font-family: sans-serif; padding: 20px;">
+
+    <!-- 1. SECCIÓN DE LOGIN (Se muestra si no está logueado) -->
+    <div id="login-section" style="max-width: 400px; margin: 100px auto; background: #1e1e1e; padding: 30px; border-radius: 8px;">
+        <h2>Acceso Administrador</h2>
+        <form id="login-form">
+            <div style="margin-bottom: 15px;">
+                <label>Correo Electrónico:</label><br>
+                <input type="email" id="admin-email" required style="width: 100%; padding: 8px; margin-top: 5px; background: #1a1a1a; color: white; border: 1px solid #444;">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Contraseña:</label><br>
+                <input type="password" id="admin-password" required style="width: 100%; padding: 8px; margin-top: 5px; background: #1a1a1a; color: white; border: 1px solid #444;">
+            </div>
+            <button type="submit" style="width: 100%; padding: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; font-weight: bold;">Ingresar</button>
+        </form>
+    </div>
+
+    <!-- 2. SECCIÓN DEL PANEL (Se oculta hasta que inicia sesión) -->
+    <div id="admin-panel" style="display: none; max-width: 800px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px;">
+            <h1>Panel de Control</h1>
+            <button id="btn-logout" style="padding: 8px 15px; background: #d9534f; color: white; border: none; cursor: pointer;">Cerrar Sesión</button>
+        </div>
+
+        <!-- Formulario para Nuevo Producto -->
+        <div style="margin-top: 20px; background: #1e1e1e; padding: 20px; border-radius: 8px;">
+            <h3>Agregar Nuevo Producto</h3>
+            <form id="form-nuevo-producto">
+                <div style="margin-bottom: 12px;">
+                    <label>Nombre del Producto:</label><br>
+                    <input type="text" id="nuevo-nombre" required style="width: 100%; padding: 8px; margin-top: 4px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label>Precio ($):</label><br>
+                    <input type="number" id="nuevo-precio" required style="width: 100%; padding: 8px; margin-top: 4px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label>URL de la Imagen:</label><br>
+                    <input type="text" id="nuevo-imagen" placeholder="imagenes/producto1.jpg" style="width: 100%; padding: 8px; margin-top: 4px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                </div>
+                
+                <!-- Stock por Talle -->
+                <label>Stock por Talle:</label>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 8px 0 15px 0;">
+                    <div>
+                        <label style="font-size: 12px;">S</label>
+                        <input type="number" id="stock-s" value="0" min="0" style="width: 100%; padding: 6px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px;">M</label>
+                        <input type="number" id="stock-m" value="0" min="0" style="width: 100%; padding: 6px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px;">L</label>
+                        <input type="number" id="stock-l" value="0" min="0" style="width: 100%; padding: 6px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px;">XL</label>
+                        <input type="number" id="stock-xl" value="0" min="0" style="width: 100%; padding: 6px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px;">XXL</label>
+                        <input type="number" id="stock-xxl" value="0" min="0" style="width: 100%; padding: 6px; background: #1a1a1a; color: white; border: 1px solid #444;">
+                    </div>
+                </div>
+
+                <button type="submit" style="width: 100%; padding: 10px; background: #2196F3; color: white; border: none; cursor: pointer; font-weight: bold;">Guardar Producto en Firebase</button>
+            </form>
+        </div>
+
+        <!-- Lista de productos actuales -->
+        <div style="margin-top: 20px; background: #1e1e1e; padding: 20px; border-radius: 8px;">
+            <h3>Productos en la Base de Datos</h3>
+            <div id="lista-productos-admin"></div>
+        </div>
+    </div>
+
+    <!-- Script del admin -->
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

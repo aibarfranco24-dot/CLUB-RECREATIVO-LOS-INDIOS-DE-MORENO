@@ -882,6 +882,16 @@ button.control-cantidad {
 .btn-volver-arriba i {
     font-size: 20px;
 }
+.link-admin-nav {
+    color: #888;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: sans-serif;
+}
+
+.link-admin-nav:hover {
+    color: #ffffff;
+}
 
 
 
@@ -1050,4 +1060,41 @@ button.control-cantidad {
         width: 100% !important;
         height: auto !important;
     }
+    #admin-panel {
+    width: 100%;
+    max-width: 600px; /* Límite para que en PC no se estire demasiado y en celu ocupe todo */
+    box-sizing: border-box;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+/* Ajustar los campos de stock para que no se amontonen en celulares pequeños */
+#form-nuevo-producto div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Fila de talles (S, M, L, XL, XXL) para que se distribuyan bien */
+.talles-container, div[style*="display: flex"] {
+    flex-wrap: wrap;
+}
+
+/* Adaptar la lista de productos para que el botón de eliminar baje si falta espacio */
+#lista-productos-admin > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 8px;
+    background: #1e1e1e;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+#lista-productos-admin > div > div {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
 }

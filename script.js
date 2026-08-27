@@ -1,19 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, doc, setDoc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyBXOloQzV1lbYK90llREvP6QfINV9ifRM4",
-    authDomain: "club-los-indios-308cf.firebaseapp.com",
-    projectId: "club-los-indios-308cf",
-    storageBucket: "club-los-indios-308cf.firebasestorage.app",
-    messagingSenderId: "364857138073",
-    appId: "1:364857138073:web:f45eaa3c18638abe7d1108",
-    measurementId: "G-Y30GF8TFFD"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+import { db } from "./firebase.js";
+import { collection, getDocs, addDoc, doc, setDoc, updateDoc, increment, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 // 1. Estado inicial
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
